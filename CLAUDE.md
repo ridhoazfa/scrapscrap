@@ -63,13 +63,13 @@ scrapscrap/
 │   │   ├── niches.js        # 24 business niche definitions and keyword mapping
 │   │   └── process-reaper.js# Process manager targeting ScrapScrap Chromium instances
 │   ├── data/
-│   │   ├── store.js         # Atomic in-memory & disk-merging lead repository
-│   │   └── countries.json   # Country, city, and subdistrict coordinates
+│   │   └── store.js         # Atomic in-memory & disk-merging lead repository
 │   └── ui/
 │       ├── server.js        # Native HTTP server & REST API (port 3800)
 │       └── public/
 │           └── index.html   # Apple-grade single-file Lead Studio interface
 ├── launchers/               # Pre-generated Windows batch files for 48+ countries
+├── countries.json           # Country, city, and subdistrict coordinates
 ├── data/                    # Runtime storage (gitignored: leads.json, state/)
 ├── AGENTS.md                # Multi-agent operating manual and JSON schema
 ├── ARCHITECTURE.md          # Detailed engineering documentation

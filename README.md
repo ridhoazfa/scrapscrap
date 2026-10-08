@@ -4,6 +4,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/ridhoazfa/scrapscrap/actions/workflows/ci.yml/badge.svg)](https://github.com/ridhoazfa/scrapscrap/actions/workflows/ci.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/ridhoazfa/scrapscrap?color=blue)](https://github.com/ridhoazfa/scrapscrap/releases)
+[![GitHub Stars](https://img.shields.io/github/stars/ridhoazfa/scrapscrap?style=social)](https://github.com/ridhoazfa/scrapscrap/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/ridhoazfa/scrapscrap?style=social)](https://github.com/ridhoazfa/scrapscrap/network/members)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-Chromium-orange.svg)](https://playwright.dev/)
 [![Zero Cloud Dependency](https://img.shields.io/badge/Cloud%20APIs-Zero%20(100%25%20Local)-success.svg)](#architecture)
@@ -99,6 +102,17 @@ node src/cli.js --export "leads.csv"
 
 # 4. Display database metrics in terminal
 node src/cli.js --stats
+```
+
+```text
+Sample terminal output:
+$ node src/cli.js --cities "Austin" --niche "Gym" --min-rating 4.0
+[SCRAPER] Starting search: Austin (Gym)...
+[MAPS] Found "Summit Performance Fitness" | 4.9 stars (280 reviews)
+[CRAWLER] Crawling website https://summitfitness.com (20-thread pool)...
+[DNS-MX] Querying Cloudflare (1.1.1.1) and Google (8.8.8.8)...
+[VERIFY] deliverable: true (Active MX record on @summitfitness.com)
+[STORE] Saved lead with email: contact@summitfitness.com
 ```
 
 ### JSON Mode for AI Agents & CI/CD
@@ -228,6 +242,12 @@ CSVs exported via Lead Studio (`/api/export/csv`) or CLI (`--export`) follow the
 - **Trademark Notice**: Google, Google Maps, Apify, Outscraper, Bright Data, and any other company or service marks cited in this repository are trademarks of their respective holders. They are referenced strictly for comparative identification under nominative fair use (*New Kids on the Block v. News America Publishing*). ScrapScrap is an independent open-source project with zero affiliation, sponsorship, or endorsement from any cited trademark holder.
 - **Outreach & Privacy Regulations**: Users are solely responsible for ensuring that any communication or data handling complies with relevant local regulations, including the CAN-SPAM Act, GDPR, UK GDPR, PECR, and CASL. Always provide genuine opt-out mechanisms and respect business privacy notices.
 - **MIT License Notice**: This software is provided "AS IS", without warranty of any kind, express or implied. The maintainers and contributors assume no liability for misuse, damages, or regulatory violations resulting from operator usage.
+
+---
+
+## Star on GitHub
+
+If ScrapScrap saved you from paying a recurring SaaS subscription, please consider starring the repository. It helps other developers and independent builders find the project and supports continued development.
 
 ---
 

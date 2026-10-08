@@ -13,13 +13,12 @@
 const dns = require('dns');
 const fs = require('fs');
 const path = require('path');
-const { promisify } = require('util');
 
 try {
   dns.setServers(['1.1.1.1', '8.8.8.8']);
 } catch (_) {}
 
-const resolveMx = promisify(dns.resolveMx);
+const resolveMx = dns.promises.resolveMx;
 
 // ── Persistent Dead Domains & Dead Emails Cache ───────────────
 const DEAD_DOMAINS_SET = new Set();
