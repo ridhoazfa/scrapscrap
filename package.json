@@ -1,0 +1,37 @@
+{
+  "name": "scrapscrap",
+  "version": "1.0.0",
+  "description": "Local-first Google Maps and website email harvester with built-in DNS MX verification and Lead Studio GUI",
+  "author": "Ridho Azfa",
+  "license": "MIT",
+  "main": "src/index.js",
+  "bin": {
+    "scrapscrap": "src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/ui/server.js",
+    "ui": "node src/ui/server.js",
+    "scrape": "node src/cli.js",
+    "generate-launchers": "node generate-launchers.cjs",
+    "install-browser": "npx playwright install chromium"
+  },
+  "keywords": [
+    "lead-generation",
+    "google-maps-scraper",
+    "email-crawler",
+    "email-verifier",
+    "b2b-leads",
+    "playwright",
+    "local-first",
+    "lead-studio"
+  ],
+  "dependencies": {
+    "axios": "^1.7.2",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
+    "playwright": "^1.44.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

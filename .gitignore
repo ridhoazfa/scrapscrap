@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Environment Variables & Local Secrets
+.env
+.env.local
+*.env
+
+# Local Storage, State & Data
+data/
+results/
+logs/
+state/
+backups/
+*.log
+*.csv
+emails_dump.md
+
+# Operating System & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

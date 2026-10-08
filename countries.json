@@ -1,0 +1,1195 @@
+[
+  {
+    "name": "indonesia",
+    "locale": "id",
+    "splits": [
+      [
+        "Jakarta",
+        "Surabaya",
+        "Bandung",
+        "Medan",
+        "Semarang",
+        "Makassar",
+        "Tangerang",
+        "Bekasi",
+        "Depok",
+        "Bogor"
+      ],
+      [
+        "Yogyakarta",
+        "Bali",
+        "Denpasar",
+        "Malang",
+        "Surakarta",
+        "Balikpapan",
+        "Palembang",
+        "Pekanbaru",
+        "Manado",
+        "Batam"
+      ],
+      [
+        "Pontianak",
+        "Banjarmasin",
+        "Samarinda",
+        "Tasikmalaya",
+        "Bandar Lampung",
+        "Cimahi",
+        "Cirebon",
+        "Mataram",
+        "Kupang",
+        "Jayapura"
+      ],
+      [
+        "Sorong",
+        "Ambon",
+        "Ternate",
+        "Palu",
+        "Kendari",
+        "Gorontalo",
+        "Bengkulu",
+        "Banda Aceh",
+        "Tarakan",
+        "Palangkaraya"
+      ]
+    ]
+  },
+  {
+    "name": "united-states",
+    "locale": "en",
+    "splits": [
+      [
+        "New York",
+        "Los Angeles",
+        "Chicago",
+        "Houston",
+        "Phoenix",
+        "Philadelphia",
+        "San Antonio",
+        "San Diego",
+        "Dallas",
+        "San Jose"
+      ],
+      [
+        "Austin",
+        "Jacksonville",
+        "San Francisco",
+        "Indianapolis",
+        "Columbus",
+        "Fort Worth",
+        "Charlotte",
+        "Seattle",
+        "Denver",
+        "El Paso"
+      ],
+      [
+        "Boston",
+        "Nashville",
+        "Detroit",
+        "Portland",
+        "Memphis",
+        "Oklahoma City",
+        "Las Vegas",
+        "Louisville",
+        "Baltimore",
+        "Milwaukee"
+      ],
+      [
+        "Albuquerque",
+        "Tucson",
+        "Fresno",
+        "Sacramento",
+        "Mesa",
+        "Atlanta",
+        "Kansas City",
+        "Omaha",
+        "Raleigh",
+        "Miami"
+      ],
+      [
+        "Honolulu",
+        "Salt Lake City",
+        "New Orleans",
+        "Minneapolis",
+        "Tampa",
+        "Orlando",
+        "Pittsburgh",
+        "Cincinnati",
+        "Cleveland",
+        "St. Louis"
+      ]
+    ]
+  },
+  {
+    "name": "canada",
+    "locale": "en",
+    "splits": [
+      [
+        "Toronto",
+        "Montreal",
+        "Vancouver",
+        "Calgary",
+        "Edmonton",
+        "Ottawa",
+        "Winnipeg",
+        "Quebec City",
+        "Hamilton",
+        "Kitchener"
+      ],
+      [
+        "London",
+        "Victoria",
+        "Halifax",
+        "Oshawa",
+        "Windsor",
+        "Saskatoon",
+        "Regina",
+        "St. John's",
+        "Barrie",
+        "Kelowna"
+      ]
+    ]
+  },
+  {
+    "name": "mexico",
+    "locale": "es",
+    "splits": [
+      [
+        "Mexico City",
+        "Guadalajara",
+        "Monterrey",
+        "Puebla",
+        "Tijuana",
+        "Leon",
+        "Merida",
+        "Cancun",
+        "Queretaro",
+        "San Luis Potosi"
+      ],
+      [
+        "Toluca",
+        "Hermosillo",
+        "Juarez",
+        "Veracruz",
+        "Saltillo",
+        "Aguascalientes",
+        "Cofor",
+        "Villahermosa",
+        "Culiacan",
+        "Mexicali"
+      ]
+    ]
+  },
+  {
+    "name": "brazil",
+    "locale": "pt",
+    "splits": [
+      [
+        "Sao Paulo",
+        "Rio de Janeiro",
+        "Brasilia",
+        "Salvador",
+        "Fortaleza",
+        "Belo Horizonte",
+        "Manaus",
+        "Curitiba",
+        "Recife",
+        "Porto Alegre"
+      ],
+      [
+        "Belem",
+        "Goiania",
+        "Guarulhos",
+        "Campinas",
+        "Sao Luis",
+        "Sao Goncalo",
+        "Maceio",
+        "Duque de Caxias",
+        "Natal",
+        "Teresina"
+      ]
+    ]
+  },
+  {
+    "name": "united-kingdom",
+    "locale": "en",
+    "splits": [
+      [
+        "London",
+        "Birmingham",
+        "Glasgow",
+        "Liverpool",
+        "Bristol",
+        "Manchester",
+        "Sheffield",
+        "Leeds",
+        "Edinburgh",
+        "Leicester"
+      ],
+      [
+        "Coventry",
+        "Bradford",
+        "Cardiff",
+        "Belfast",
+        "Nottingham",
+        "Kingston upon Hull",
+        "Newcastle upon Tyne",
+        "Stoke-on-Trent",
+        "Southampton",
+        "Derby"
+      ],
+      [
+        "Plymouth",
+        "Wolverhampton",
+        "Swansea",
+        "Aberdeen",
+        "Bournemouth",
+        "Norwich",
+        "Milton Keynes",
+        "Swindon",
+        "Luton",
+        "Oxford"
+      ]
+    ]
+  },
+  {
+    "name": "germany",
+    "locale": "de",
+    "splits": [
+      [
+        "Berlin",
+        "Hamburg",
+        "Munich",
+        "Cologne",
+        "Frankfurt",
+        "Stuttgart",
+        "Dusseldorf",
+        "Leipzig",
+        "Dortmund",
+        "Essen"
+      ],
+      [
+        "Bremen",
+        "Dresden",
+        "Hannover",
+        "Nuremberg",
+        "Duisburg",
+        "Bochum",
+        "Wuppertal",
+        "Bielefeld",
+        "Bonn",
+        "Munster"
+      ],
+      [
+        "Mannheim",
+        "Karlsruhe",
+        "Augsburg",
+        "Wiesbaden",
+        "Gelsenkirchen",
+        "Monchengladbach",
+        "Braunschweig",
+        "Chemnitz",
+        "Kiel",
+        "Aachen"
+      ]
+    ]
+  },
+  {
+    "name": "france",
+    "locale": "fr",
+    "splits": [
+      [
+        "Paris",
+        "Marseille",
+        "Lyon",
+        "Toulouse",
+        "Nice",
+        "Nantes",
+        "Montpellier",
+        "Strasbourg",
+        "Bordeaux",
+        "Lille"
+      ],
+      [
+        "Rennes",
+        "Reims",
+        "Saint-Etienne",
+        "Le Havre",
+        "Toulon",
+        "Grenoble",
+        "Dijon",
+        "Angers",
+        "Nimes",
+        "Villeurbanne"
+      ]
+    ]
+  },
+  {
+    "name": "italy",
+    "locale": "it",
+    "splits": [
+      [
+        "Rome",
+        "Milan",
+        "Naples",
+        "Turin",
+        "Florence",
+        "Bologna",
+        "Genoa",
+        "Palermo",
+        "Verona",
+        "Venice"
+      ],
+      [
+        "Bari",
+        "Catania",
+        "Messina",
+        "Padua",
+        "Trieste",
+        "Brescia",
+        "Taranto",
+        "Prato",
+        "Reggio Calabria",
+        "Modena"
+      ]
+    ]
+  },
+  {
+    "name": "spain",
+    "locale": "es",
+    "splits": [
+      [
+        "Madrid",
+        "Barcelona",
+        "Valencia",
+        "Seville",
+        "Bilbao",
+        "Malaga",
+        "Zaragoza",
+        "Palma de Mallorca",
+        "Las Palmas",
+        "Alicante"
+      ],
+      [
+        "Murcia",
+        "Cordoba",
+        "Valladolid",
+        "Vigo",
+        "Gijon",
+        "Hospitalet de Llobregat",
+        "Vitoria-Gasteiz",
+        "A Coruna",
+        "Elche",
+        "Granada"
+      ]
+    ]
+  },
+  {
+    "name": "netherlands",
+    "locale": "nl",
+    "splits": [
+      [
+        "Amsterdam",
+        "Rotterdam",
+        "The Hague",
+        "Utrecht",
+        "Eindhoven",
+        "Tilburg",
+        "Groningen",
+        "Almere",
+        "Breda",
+        "Nijmegen"
+      ],
+      [
+        "Enschede",
+        "Haarlem",
+        "Arnhem",
+        "Zaanstad",
+        "Amersfoort",
+        "Apeldoorn",
+        "s-Hertogenbosch",
+        "Hoofddorp",
+        "Maastricht",
+        "Dordrecht"
+      ]
+    ]
+  },
+  {
+    "name": "switzerland",
+    "locale": "de",
+    "splits": [
+      [
+        "Zurich",
+        "Geneva",
+        "Basel",
+        "Lausanne",
+        "Bern",
+        "Winterthur",
+        "Lucerne",
+        "St. Gallen",
+        "Lugano",
+        "Biel"
+      ],
+      [
+        "Thun",
+        "Bellinzona",
+        "Koniz",
+        "La Chaux-de-Fonds",
+        "Schaffhausen",
+        "Fribourg",
+        "Vernier",
+        "Chur",
+        "Neuchatel",
+        "Uster"
+      ]
+    ]
+  },
+  {
+    "name": "ireland",
+    "locale": "en",
+    "splits": [
+      [
+        "Dublin",
+        "Cork",
+        "Limerick",
+        "Galway",
+        "Waterford",
+        "Drogheda",
+        "Dundalk",
+        "Swords",
+        "Bray",
+        "Navan"
+      ],
+      [
+        "Kilkenny",
+        "Ennis",
+        "Carlow",
+        "Tralee",
+        "Newbridge",
+        "Portlaoise",
+        "Balbriggan",
+        "Naas",
+        "Athlone",
+        "Mullingar"
+      ]
+    ]
+  },
+  {
+    "name": "belgium",
+    "locale": "nl",
+    "splits": [
+      [
+        "Brussels",
+        "Antwerp",
+        "Ghent",
+        "Charleroi",
+        "Liege",
+        "Bruges",
+        "Namur",
+        "Leuven",
+        "Mons",
+        "Aalst"
+      ],
+      [
+        "Mechelen",
+        "La Louviere",
+        "Hasselt",
+        "Sint-Niklaas",
+        "Kortrijk",
+        "Ostend",
+        "Tournai",
+        "Genk",
+        "Seraing",
+        "Roeselare"
+      ]
+    ]
+  },
+  {
+    "name": "austria",
+    "locale": "de",
+    "splits": [
+      [
+        "Vienna",
+        "Graz",
+        "Linz",
+        "Salzburg",
+        "Innsbruck",
+        "Klagenfurt",
+        "Villach",
+        "Wels",
+        "Sankt Polten",
+        "Dornbirn"
+      ],
+      [
+        "Wiener Neustadt",
+        "Steyr",
+        "Feldkirch",
+        "Bregenz",
+        "Leonding",
+        "Klosterneuburg",
+        "Baden",
+        "Wolfsberg",
+        "Leoben",
+        "Krems an der Donau"
+      ]
+    ]
+  },
+  {
+    "name": "sweden",
+    "locale": "sv",
+    "splits": [
+      [
+        "Stockholm",
+        "Gothenburg",
+        "Malmo",
+        "Uppsala",
+        "Vasteras",
+        "Orebro",
+        "Linkoping",
+        "Helsingborg",
+        "Jonkoping",
+        "Norrkoping"
+      ],
+      [
+        "Lund",
+        "Umea",
+        "Gavle",
+        "Boras",
+        "Sodertalje",
+        "Eskilstuna",
+        "Halmstad",
+        "Vaxjo",
+        "Karlstad",
+        "Sundsvall"
+      ]
+    ]
+  },
+  {
+    "name": "norway",
+    "locale": "no",
+    "splits": [
+      [
+        "Oslo",
+        "Bergen",
+        "Trondheim",
+        "Stavanger",
+        "Sandvika",
+        "Drammen",
+        "Fredrikstad",
+        "Porsgrunn",
+        "Kristiansand",
+        "Alesund"
+      ],
+      [
+        "Tonsberg",
+        "Moss",
+        "Haugesund",
+        "Sandefjord",
+        "Arendal",
+        "Bodoe",
+        "Tromsoe",
+        "Hamar",
+        "Larvik",
+        "Halden"
+      ]
+    ]
+  },
+  {
+    "name": "denmark",
+    "locale": "da",
+    "splits": [
+      [
+        "Copenhagen",
+        "Aarhus",
+        "Odense",
+        "Aalborg",
+        "Esbjerg",
+        "Randers",
+        "Kolding",
+        "Horsens",
+        "Vejle",
+        "Roskilde"
+      ],
+      [
+        "Herning",
+        "Helsingor",
+        "Silkeborg",
+        "Naestved",
+        "Viborg",
+        "Fredericia",
+        "Ballerup",
+        "Holstebro",
+        "Taastrup",
+        "Slagelse"
+      ]
+    ]
+  },
+  {
+    "name": "finland",
+    "locale": "fi",
+    "splits": [
+      [
+        "Helsinki",
+        "Espoo",
+        "Tampere",
+        "Vantaa",
+        "Oulu",
+        "Turku",
+        "Jyvaskyla",
+        "Lahti",
+        "Kuopio",
+        "Pori"
+      ],
+      [
+        "Kouvola",
+        "Joensuu",
+        "Lappeenranta",
+        "Hameenlinna",
+        "Vaasa",
+        "Rovaniemi",
+        "Seinajoki",
+        "Mikkeli",
+        "Kotka",
+        "Salo"
+      ]
+    ]
+  },
+  {
+    "name": "poland",
+    "locale": "pl",
+    "splits": [
+      [
+        "Warsaw",
+        "Krakow",
+        "Lodz",
+        "Wroclaw",
+        "Poznan",
+        "Gdansk",
+        "Szczecin",
+        "Bydgoszcz",
+        "Lublin",
+        "Katowice"
+      ],
+      [
+        "Bialystok",
+        "Gdynia",
+        "Czestochowa",
+        "Radom",
+        "Sosnowiec",
+        "Torun",
+        "Kielce",
+        "Rzeszow",
+        "Gliwice",
+        "Zabrze"
+      ]
+    ]
+  },
+  {
+    "name": "portugal",
+    "locale": "pt",
+    "splits": [
+      [
+        "Lisbon",
+        "Porto",
+        "Vila Nova de Gaia",
+        "Amadora",
+        "Braga",
+        "Funchal",
+        "Coimbra",
+        "Setubal",
+        "Almada",
+        "Agualva-Cacem"
+      ],
+      [
+        "Queluz",
+        "Rio Tinto",
+        "Barreiro",
+        "Aveiro",
+        "Viseu",
+        "Leiria",
+        "Guimaraes",
+        "Faro",
+        "Evora",
+        "Ponta Delgada"
+      ]
+    ]
+  },
+  {
+    "name": "czech-republic",
+    "locale": "cs",
+    "splits": [
+      [
+        "Prague",
+        "Brno",
+        "Ostrava",
+        "Pilsen",
+        "Liberec",
+        "Olomouc",
+        "Ceske Budejovice",
+        "Hradec Kralove",
+        "Usti nad Labem",
+        "Pardubice"
+      ],
+      [
+        "Zlin",
+        "Havirov",
+        "Kladno",
+        "Most",
+        "Opava",
+        "Frydek-Mistek",
+        "Karvina",
+        "Jihlava",
+        "Teplice",
+        "Decin"
+      ]
+    ]
+  },
+  {
+    "name": "hungary",
+    "locale": "hu",
+    "splits": [
+      [
+        "Budapest",
+        "Debrecen",
+        "Szeged",
+        "Miskolc",
+        "Pecs",
+        "Gyor",
+        "Nyiregyhaza",
+        "Kecskemet",
+        "Szekesfehervar",
+        "Szombathely"
+      ]
+    ]
+  },
+  {
+    "name": "romania",
+    "locale": "ro",
+    "splits": [
+      [
+        "Bucharest",
+        "Cluj-Napoca",
+        "Timisoara",
+        "Iasi",
+        "Constanta",
+        "Craiova",
+        "Brasov",
+        "Galati",
+        "Ploiesti",
+        "Oradea"
+      ],
+      [
+        "Braila",
+        "Arad",
+        "Pitesti",
+        "Sibiu",
+        "Bacau",
+        "Targu Mures",
+        "Baia Mare",
+        "Buzau",
+        "Botosani",
+        "Satu Mare"
+      ]
+    ]
+  },
+  {
+    "name": "bulgaria",
+    "locale": "bg",
+    "splits": [
+      [
+        "Sofia",
+        "Plovdiv",
+        "Varna",
+        "Burgas",
+        "Ruse",
+        "Stara Zagora",
+        "Pleven",
+        "Sliven",
+        "Dobrich",
+        "Shumen"
+      ]
+    ]
+  },
+  {
+    "name": "slovakia",
+    "locale": "sk",
+    "splits": [
+      [
+        "Bratislava",
+        "Kosice",
+        "Presov",
+        "Zilina",
+        "Nitra",
+        "Banska Bystrica",
+        "Trnava",
+        "Martin",
+        "Trencin",
+        "Poprad"
+      ]
+    ]
+  },
+  {
+    "name": "slovenia",
+    "locale": "sl",
+    "splits": [
+      [
+        "Ljubljana",
+        "Maribor",
+        "Celje",
+        "Kranj",
+        "Velenje",
+        "Koper",
+        "Novo Mesto",
+        "Ptuj",
+        "Trbovlje",
+        "Kamnik"
+      ]
+    ]
+  },
+  {
+    "name": "estonia",
+    "locale": "et",
+    "splits": [
+      [
+        "Tallinn",
+        "Tartu",
+        "Narva",
+        "Parnu",
+        "Kohtla-Jarve",
+        "Viljandi",
+        "Rakvere",
+        "Maardu",
+        "Kuressaare",
+        "Voros"
+      ]
+    ]
+  },
+  {
+    "name": "lithuania",
+    "locale": "lt",
+    "splits": [
+      [
+        "Vilnius",
+        "Kaunas",
+        "Klaipeda",
+        "Siauliai",
+        "Panevezys",
+        "Alytus",
+        "Marijampole",
+        "Mazeikiai",
+        "Jonava",
+        "Utena"
+      ]
+    ]
+  },
+  {
+    "name": "luxembourg",
+    "locale": "fr",
+    "splits": [
+      [
+        "Luxembourg City",
+        "Esch-sur-Alzette",
+        "Differdange",
+        "Dudelange",
+        "Ettelbruck"
+      ]
+    ]
+  },
+  {
+    "name": "cyprus",
+    "locale": "el",
+    "splits": [
+      [
+        "Nicosia",
+        "Limassol",
+        "Larnaca",
+        "Paphos",
+        "Famagusta",
+        "Kyrenia"
+      ]
+    ]
+  },
+  {
+    "name": "gibraltar",
+    "locale": "en",
+    "splits": [
+      [
+        "Gibraltar"
+      ]
+    ]
+  },
+  {
+    "name": "latvia",
+    "locale": "lv",
+    "splits": [
+      [
+        "Riga",
+        "Daugavpils",
+        "Liepaja",
+        "Jelgava",
+        "Jurmala",
+        "Ventspils",
+        "Rezekne",
+        "Valmiera",
+        "Jekabpils",
+        "Ogre"
+      ]
+    ]
+  },
+  {
+    "name": "liechtenstein",
+    "locale": "de",
+    "splits": [
+      [
+        "Vaduz",
+        "Schaan",
+        "Triesen",
+        "Balzers"
+      ]
+    ]
+  },
+  {
+    "name": "malta",
+    "locale": "en",
+    "splits": [
+      [
+        "Valletta",
+        "Birkirkara",
+        "Mosta",
+        "Sliema",
+        "Qormi",
+        "Zabbar",
+        "San Pawl il-Bahar",
+        "St. Julian's"
+      ]
+    ]
+  },
+  {
+    "name": "japan",
+    "locale": "ja",
+    "splits": [
+      [
+        "Tokyo",
+        "Yokohama",
+        "Osaka",
+        "Nagoya",
+        "Sapporo",
+        "Kobe",
+        "Kyoto",
+        "Fukuoka",
+        "Kawasaki",
+        "Saitama"
+      ],
+      [
+        "Hiroshima",
+        "Sendai",
+        "Chiba",
+        "Kitakyushu",
+        "Sakai",
+        "Niigata",
+        "Hamamatsu",
+        "Shizuoka",
+        "Sagamihara",
+        "Okayama"
+      ]
+    ]
+  },
+  {
+    "name": "hong-kong",
+    "locale": "zh",
+    "splits": [
+      [
+        "Hong Kong",
+        "Kowloon",
+        "Shatin",
+        "Tuen Mun"
+      ]
+    ]
+  },
+  {
+    "name": "malaysia",
+    "locale": "en",
+    "splits": [
+      [
+        "Kuala Lumpur",
+        "Penang",
+        "Johor Bahru",
+        "Ipoh",
+        "Malacca",
+        "Kota Kinabalu",
+        "Kuching",
+        "Shah Alam",
+        "Petaling Jaya",
+        "Subang Jaya"
+      ]
+    ]
+  },
+  {
+    "name": "singapore",
+    "locale": "en",
+    "splits": [
+      [
+        "Singapore",
+        "Jurong",
+        "Tampines",
+        "Woodlands",
+        "Yishun"
+      ]
+    ]
+  },
+  {
+    "name": "thailand",
+    "locale": "th",
+    "splits": [
+      [
+        "Bangkok",
+        "Nonthaburi",
+        "Pak Kret",
+        "Chiang Mai",
+        "Pattaya",
+        "Phuket",
+        "Hat Yai",
+        "Udon Thani",
+        "Nakhon Ratchasima",
+        "Surat Thani"
+      ]
+    ]
+  },
+  {
+    "name": "united-arab-emirates",
+    "locale": "en",
+    "splits": [
+      [
+        "Dubai",
+        "Abu Dhabi",
+        "Sharjah",
+        "Al Ain",
+        "Ajman",
+        "Ras Al Khaimah",
+        "Fujairah",
+        "Umm Al Quwain",
+        "Khor Fakkan",
+        "Kalba"
+      ]
+    ]
+  },
+  {
+    "name": "australia",
+    "locale": "en",
+    "splits": [
+      [
+        "Sydney",
+        "Melbourne",
+        "Brisbane",
+        "Perth",
+        "Adelaide",
+        "Gold Coast",
+        "Canberra",
+        "Newcastle",
+        "Wollongong",
+        "Hobart"
+      ],
+      [
+        "Geelong",
+        "Townsville",
+        "Cairns",
+        "Toowoomba",
+        "Ballarat",
+        "Bendigo",
+        "Albury",
+        "Launceston",
+        "Mackay",
+        "Rockhampton"
+      ]
+    ]
+  },
+  {
+    "name": "new-zealand",
+    "locale": "en",
+    "splits": [
+      [
+        "Auckland",
+        "Wellington",
+        "Christchurch",
+        "Hamilton",
+        "Tauranga",
+        "Dunedin",
+        "Palmerston North",
+        "Napier",
+        "Nelson",
+        "Rotorua"
+      ]
+    ]
+  },
+  {
+    "name": "ghana",
+    "locale": "en",
+    "splits": [
+      [
+        "Accra",
+        "Kumasi",
+        "Takoradi",
+        "Tamale",
+        "Tema",
+        "Cape Coast",
+        "Sekondi",
+        "Obuasi",
+        "Madina",
+        "Koforidua"
+      ]
+    ]
+  },
+  {
+    "name": "kenya",
+    "locale": "en",
+    "splits": [
+      [
+        "Nairobi",
+        "Mombasa",
+        "Kisumu",
+        "Nakuru",
+        "Eldoret",
+        "Thika",
+        "Malindi",
+        "Kitale",
+        "Garissa",
+        "Kakamega"
+      ]
+    ]
+  },
+  {
+    "name": "nigeria",
+    "locale": "en",
+    "splits": [
+      [
+        "Lagos",
+        "Abuja",
+        "Port Harcourt",
+        "Kano",
+        "Ibadan",
+        "Benin City",
+        "Kaduna",
+        "Enugu",
+        "Owerri",
+        "Onitsha"
+      ]
+    ]
+  },
+  {
+    "name": "south-africa",
+    "locale": "en",
+    "splits": [
+      [
+        "Johannesburg",
+        "Cape Town",
+        "Durban",
+        "Pretoria",
+        "Gqeberha",
+        "Bloemfontein",
+        "East London",
+        "Polokwane",
+        "Nelspruit",
+        "Sandton"
+      ]
+    ]
+  }
+]

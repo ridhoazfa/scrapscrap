@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScrapScrap — Lead Studio & Email Harvester</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+            },
+            surface: {
+              base: '#090a0f',
+              card: '#11131a',
+              cardHover: '#161922',
+              border: '#1f2430',
+              borderLight: '#2b3242',
+              muted: '#8b949e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Apple Spring Motion & Impeccable Anti-Slop Discipline */
+    :root {
+      color-scheme: dark;
+    }
+    body {
+      background-color: #090a0f;
+      color: #f1f5f9;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    .glass-nav {
+      background: rgba(17, 19, 26, 0.75);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .sheet-transition {
+      transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease;
+    }
+    .active-press:active {
+      transform: scale(0.98);
+      transition: transform 80ms ease-out;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090a0f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2b3242;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3b4458;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-brand-500/30 selection:text-white">
+
+  <!-- Floating Translucent Navigation Bar -->
+  <header class="sticky top-0 z-40 glass-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+        </div>
+        <div>
+          <span class="font-bold text-base tracking-tight text-white">ScrapScrap</span>
+          <span class="text-xs font-mono ml-2 px-2 py-0.5 rounded bg-surface-border text-surface-muted border border-surface-borderLight">Lead Studio</span>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <div id="crawler-status-pill" class="flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="crawler-status-text">Engine Ready</span>
+        </div>
+
+        <button onclick="openVerifyModal()" class="active-press px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-card hover:bg-surface-cardHover border border-surface-border hover:border-surface-borderLight text-slate-200 flex items-center space-x-2 transition">
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span>MX Validator</span>
+        </button>
+
+        <a href="/api/export/csv" class="active-press px-3.5 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white flex items-center space-x-2 transition shadow-sm">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span>Export CSV</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Top Telemetry Row -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="p-4 rounded-xl bg-surface-card border border-surface-border">
+        <div class="text-xs font-medium text-surface-muted uppercase tracking-wider">Total Leads Banked</div>
+        <div id="stat-total-leads" class="mt-2 text-2xl font-bold font-mono text-white tracking-tight">0</div>
+        <div class="mt-1 text-xs text-slate-500">Persisted in local database</div>
+      </div>
+      <div class="p-4 rounded-xl bg-surface-card border border-surface-border">
+        <div class="text-xs font-medium text-surface-muted uppercase tracking-wider">Verified Deliverable Emails</div>
+        <div id="stat-verified-emails" class="mt-2 text-2xl font-bold font-mono text-emerald-400 tracking-tight">0</div>
+        <div class="mt-1 text-xs text-slate-500">Passed 5-layer MX checks</div>
+      </div>
+      <div class="p-4 rounded-xl bg-surface-card border border-surface-border">
+        <div class="text-xs font-medium text-surface-muted uppercase tracking-wider">Multiple Email Sources</div>
+        <div id="stat-multi-emails" class="mt-2 text-2xl font-bold font-mono text-amber-400 tracking-tight">0</div>
+        <div class="mt-1 text-xs text-slate-500">Secondary contact options</div>
+      </div>
+      <div class="p-4 rounded-xl bg-surface-card border border-surface-border">
+        <div class="text-xs font-medium text-surface-muted uppercase tracking-wider">Average Star Rating</div>
+        <div id="stat-avg-rating" class="mt-2 text-2xl font-bold font-mono text-blue-400 tracking-tight">0.0</div>
+        <div class="mt-1 text-xs text-slate-500">Google Maps review score</div>
+      </div>
+    </div>
+
+    <!-- Scraper Controller Section -->
+    <div class="p-5 rounded-xl bg-surface-card border border-surface-border">
+      <div class="flex items-center justify-between pb-4 border-b border-surface-border">
+        <div>
+          <h2 class="text-sm font-semibold text-white">Live Crawler Controller</h2>
+          <p class="text-xs text-surface-muted mt-0.5">Spawn background Google Maps workers &amp; extract qualified verified leads.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button id="btn-toggle-crawler" onclick="handleScraperToggle()" class="active-press px-4 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white flex items-center space-x-1.5 transition">
+            <svg id="icon-start" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span id="btn-scraper-label">Start Crawl</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-4">
+        <div>
+          <label class="block text-xs font-medium text-surface-muted mb-1">Target Country</label>
+          <input type="text" id="ctl-country" value="indonesia" class="w-full px-3 py-1.5 text-xs rounded-lg bg-surface-base border border-surface-border focus:border-emerald-500 focus:outline-none text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-surface-muted mb-1">Target Cities</label>
+          <input type="text" id="ctl-city" value="Jakarta,Bandung" class="w-full px-3 py-1.5 text-xs rounded-lg bg-surface-base border border-surface-border focus:border-emerald-500 focus:outline-none text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-surface-muted mb-1">Niche Category</label>
+          <input type="text" id="ctl-niche" value="Gym" class="w-full px-3 py-1.5 text-xs rounded-lg bg-surface-base border border-surface-border focus:border-emerald-500 focus:outline-none text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-surface-muted mb-1">Rating Floor (Min)</label>
+          <input type="number" step="0.1" id="ctl-rating" value="4.0" class="w-full px-3 py-1.5 text-xs rounded-lg bg-surface-base border border-surface-border focus:border-emerald-500 focus:outline-none text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-surface-muted mb-1">Reviews Floor (Min)</label>
+          <input type="number" id="ctl-reviews" value="100" class="w-full px-3 py-1.5 text-xs rounded-lg bg-surface-base border border-surface-border focus:border-emerald-500 focus:outline-none text-white font-mono">
+        </div>
+      </div>
+
+      <!-- Live Terminal Log Drawer -->
+      <div class="mt-4 pt-3 border-t border-surface-border/50">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-mono text-surface-muted uppercase tracking-wider">Live Worker Feed</span>
+          <button onclick="toggleLogTerminal()" class="text-xs text-slate-400 hover:text-white transition">Toggle View</button>
+        </div>
+        <div id="log-terminal" class="h-28 overflow-y-auto p-3 rounded-lg bg-black/60 border border-surface-border font-mono text-xs text-slate-300 space-y-1">
+          <div class="text-slate-500">[SYSTEM] Lead Studio ready. Configure targets above and click Start Crawl.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leads Explorer Table & Controls -->
+    <div class="rounded-xl bg-surface-card border border-surface-border overflow-hidden">
+      <!-- Search & Filters Toolbar -->
+      <div class="p-4 border-b border-surface-border flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div class="relative flex-1 max-w-md">
+          <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input type="text" id="search-input" oninput="debounceSearch()" placeholder="Search business, email, contact, city, or website..." class="w-full pl-9 pr-4 py-2 text-xs rounded-lg bg-surface-base border border-surface-border focus:border-emerald-500 focus:outline-none text-white placeholder-slate-500">
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <select id="filter-email-status" onchange="fetchLeads()" class="px-3 py-2 text-xs rounded-lg bg-surface-base border border-surface-border text-slate-300 focus:outline-none">
+            <option value="">All Email Statuses</option>
+            <option value="has_email">Has Email Address</option>
+            <option value="multi_email">Multiple Emails (2+)</option>
+            <option value="no_email">No Email Yet</option>
+          </select>
+
+          <button onclick="fetchLeads()" class="active-press p-2 rounded-lg bg-surface-base border border-surface-border hover:border-surface-borderLight text-slate-400 hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="bg-surface-base border-b border-surface-border text-surface-muted font-medium uppercase tracking-wider font-mono">
+              <th class="py-3 px-4">Business &amp; Contact</th>
+              <th class="py-3 px-4">Location &amp; Niche</th>
+              <th class="py-3 px-4">Reputation</th>
+              <th class="py-3 px-4">Primary Outreach Email</th>
+              <th class="py-3 px-4">Website</th>
+              <th class="py-3 px-4 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="leads-table-body" class="divide-y divide-surface-border">
+            <tr>
+              <td colspan="6" class="py-12 text-center text-slate-500">Loading leads database...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="p-3 border-t border-surface-border flex items-center justify-between text-xs text-surface-muted">
+        <div>
+          Showing <span id="page-start" class="text-white font-mono">0</span> to <span id="page-end" class="text-white font-mono">0</span> of <span id="page-total" class="text-white font-mono">0</span> leads
+        </div>
+        <div class="flex items-center space-x-2">
+          <button id="btn-prev" onclick="prevPage()" class="px-2.5 py-1 rounded bg-surface-base border border-surface-border hover:border-surface-borderLight disabled:opacity-40 text-slate-300">Previous</button>
+          <span id="page-number" class="font-mono text-slate-400">1</span>
+          <button id="btn-next" onclick="nextPage()" class="px-2.5 py-1 rounded bg-surface-base border border-surface-border hover:border-surface-borderLight disabled:opacity-40 text-slate-300">Next</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Slide-Over Inspector & Email Adjuster Drawer (Apple Design Specification) -->
+  <div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+  <aside id="inspector-drawer" class="fixed right-0 top-0 bottom-0 z-50 w-full max-w-lg bg-surface-card border-l border-surface-border shadow-2xl translate-x-full sheet-transition flex flex-col">
+    <!-- Drawer Header -->
+    <div class="p-5 border-b border-surface-border flex items-center justify-between">
+      <div>
+        <h3 id="drawer-title" class="text-sm font-semibold text-white truncate max-w-sm">Lead Details</h3>
+        <p class="text-xs text-surface-muted mt-0.5">Inspect and adjust lead metadata, email, and outreach notes.</p>
+      </div>
+      <button onclick="closeDrawer()" class="active-press p-1.5 rounded-lg bg-surface-base border border-surface-border hover:border-surface-borderLight text-slate-400 hover:text-white transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+
+    <!-- Drawer Body -->
+    <div class="flex-1 overflow-y-auto p-5 space-y-4 text-xs">
+      <div>
+        <label class="block text-surface-muted font-medium mb-1">Business Name</label>
+        <input type="text" id="edit-business-name" class="w-full px-3 py-2 rounded-lg bg-surface-base border border-surface-border text-white focus:outline-none focus:border-emerald-500">
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-surface-muted font-medium mb-1">City</label>
+          <input type="text" id="edit-city" class="w-full px-3 py-2 rounded-lg bg-surface-base border border-surface-border text-white focus:outline-none focus:border-emerald-500">
+        </div>
+        <div>
+          <label class="block text-surface-muted font-medium mb-1">Niche Category</label>
+          <input type="text" id="edit-niche" class="w-full px-3 py-2 rounded-lg bg-surface-base border border-surface-border text-white focus:outline-none focus:border-emerald-500">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-surface-muted font-medium mb-1">Phone Number</label>
+          <input type="text" id="edit-phone" class="w-full px-3 py-2 rounded-lg bg-surface-base border border-surface-border text-white font-mono focus:outline-none focus:border-emerald-500">
+        </div>
+        <div>
+          <label class="block text-surface-muted font-medium mb-1">Website URL</label>
+          <div class="flex space-x-1">
+            <input type="text" id="edit-website" class="w-full px-3 py-2 rounded-lg bg-surface-base border border-surface-border text-white font-mono focus:outline-none focus:border-emerald-500">
+            <a id="btn-open-website" href="#" target="_blank" class="p-2 rounded-lg bg-surface-base border border-surface-border hover:border-surface-borderLight text-slate-400 hover:text-white flex items-center justify-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-surface-border">
+        <label class="block text-surface-muted font-medium mb-1">Contact Person / Owner Name</label>
+        <input type="text" id="edit-contact-person" placeholder="e.g. John Doe (Managing Director)" class="w-full px-3 py-2 rounded-lg bg-surface-base border border-surface-border text-white focus:outline-none focus:border-emerald-500">
+      </div>
+
+      <div>
+        <label class="block text-surface-muted font-medium mb-1">Primary Outreach Email (Delivered)</label>
+        <div class="flex space-x-2">
+          <input type="email" id="edit-primary-email" placeholder="primary@business.com" class="flex-1 px-3 py-2 rounded-lg bg-surface-base border border-surface-border text-emerald-400 font-mono focus:outline-none focus:border-emerald-500">
+          <button onclick="verifyCurrentPrimaryEmail()" class="px-3 py-2 rounded-lg bg-surface-base border border-surface-border hover:border-surface-borderLight text-slate-300 font-medium transition">Check MX</button>
+        </div>
+        <div id="email-verify-feedback" class="mt-1 text-xs"></div>
+      </div>
+
+      <!-- Discovered Alternate Emails List -->
+      <div class="p-3 rounded-lg bg-surface-base border border-surface-border space-y-2">
+        <div class="text-xs font-medium text-surface-muted">Discovered Website Emails:</div>
+        <div id="discovered-emails-list" class="space-y-1.5">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-surface-muted font-medium mb-1">Outreach Status</label>
+        <select id="edit-status" class="w-full px-3 py-2 rounded-lg bg-surface-base border border-surface-border text-white focus:outline-none focus:border-emerald-500">
+          <option value="verified">Verified Deliverable</option>
+          <option value="needs_review">Needs Manual Review</option>
+          <option value="new">Discovered (New)</option>
+          <option value="do_not_contact">Do Not Contact</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-surface-muted font-medium mb-1">Internal Notes</label>
+        <textarea id="edit-notes" rows="3" placeholder="Add custom notes, cold outreach personalization angles..." class="w-full px-3 py-2 rounded-lg bg-surface-base border border-surface-border text-white focus:outline-none focus:border-emerald-500"></textarea>
+      </div>
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="p-4 border-t border-surface-border flex items-center justify-between bg-surface-base">
+      <button onclick="deleteCurrentLead()" class="active-press px-3 py-1.5 rounded-lg text-xs font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition">
+        Delete Lead
+      </button>
+      <div class="flex items-center space-x-2">
+        <button onclick="closeDrawer()" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-surface-card border border-surface-border transition">Cancel</button>
+        <button onclick="saveCurrentLead()" class="active-press px-4 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white transition">Save Changes</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MX Validator Modal -->
+  <div id="verify-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="w-full max-w-md p-5 rounded-xl bg-surface-card border border-surface-border shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-surface-border">
+        <h3 class="text-sm font-semibold text-white">5-Layer MX Deliverability Sandbox</h3>
+        <button onclick="closeVerifyModal()" class="text-slate-400 hover:text-white">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div>
+        <label class="block text-xs text-surface-muted mb-1">Test Email Address</label>
+        <div class="flex space-x-2">
+          <input type="email" id="modal-verify-input" placeholder="info@company.com" class="flex-1 px-3 py-2 rounded-lg bg-surface-base border border-surface-border text-white text-xs font-mono focus:outline-none focus:border-emerald-500">
+          <button onclick="runModalVerify()" class="active-press px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium">Verify</button>
+        </div>
+      </div>
+      <div id="modal-verify-result" class="p-3 rounded-lg bg-surface-base border border-surface-border text-xs font-mono text-slate-400 min-h-[70px] flex items-center justify-center text-center">
+        Enter an email above to query Cloudflare (1.1.1.1) and Google (8.8.8.8) DNS servers.
+      </div>
+    </div>
+  </div>
+
+  <!-- Client State Script -->
+  <script>
+    let currentLeads = [];
+    let currentPage = 1;
+    let totalPages = 1;
+    let selectedLead = null;
+    let searchDebounceTimer = null;
+    let pollInterval = null;
+
+    async function fetchStats() {
+      try {
+        const res = await fetch('/api/stats');
+        const data = await res.json();
+        document.getElementById('stat-total-leads').textContent = data.totalLeads || 0;
+        document.getElementById('stat-verified-emails').textContent = data.leadsWithEmail || 0;
+        document.getElementById('stat-multi-emails').textContent = data.multiEmailLeads || 0;
+        document.getElementById('stat-avg-rating').textContent = data.averageRating || '0.0';
+
+        const statusPill = document.getElementById('crawler-status-pill');
+        const statusText = document.getElementById('crawler-status-text');
+        const btnScraper = document.getElementById('btn-scraper-label');
+
+        if (data.isScraperActive) {
+          statusPill.className = 'flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-medium bg-amber-500/10 border border-amber-500/30 text-amber-400';
+          statusText.textContent = 'Crawling Active';
+          btnScraper.textContent = 'Stop Crawl';
+        } else {
+          statusPill.className = 'flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-500/10 border border-emerald-500/20 text-emerald-400';
+          statusText.textContent = 'Engine Ready';
+          btnScraper.textContent = 'Start Crawl';
+        }
+
+        if (Array.isArray(data.recentLogs) && data.recentLogs.length > 0) {
+          const terminal = document.getElementById('log-terminal');
+          terminal.innerHTML = data.recentLogs.map(l => `<div class="leading-relaxed">${escapeHtml(l)}</div>`).join('');
+          terminal.scrollTop = terminal.scrollHeight;
+        }
+      } catch (err) {
+        console.error('Error fetching stats:', err);
+      }
+    }
+
+    async function fetchLeads() {
+      const search = document.getElementById('search-input').value.trim();
+      const emailStatus = document.getElementById('filter-email-status').value;
+      const params = new URLSearchParams({ page: currentPage, limit: 25 });
+      if (search) params.append('search', search);
+      if (emailStatus) params.append('emailStatus', emailStatus);
+
+      try {
+        const res = await fetch(`/api/leads?${params.toString()}`);
+        const data = await res.json();
+        currentLeads = data.leads || [];
+        currentPage = data.page || 1;
+        totalPages = data.totalPages || 1;
+
+        renderLeadsTable();
+        updatePagination(data.total);
+      } catch (err) {
+        console.error('Error fetching leads:', err);
+      }
+    }
+
+    function renderLeadsTable() {
+      const tbody = document.getElementById('leads-table-body');
+      if (currentLeads.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-slate-500">No leads found matching your criteria. Start a crawl or refine search.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = currentLeads.map(lead => {
+        const hasEmail = !!lead.primaryEmail || (lead.emails && lead.emails.length > 0);
+        const emailBadge = hasEmail
+          ? `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${escapeHtml(lead.primaryEmail || lead.emails[0])}</span>`
+          : `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono text-slate-500 bg-surface-base border border-surface-border">No Email Found</span>`;
+
+        return `
+          <tr class="hover:bg-surface-cardHover/60 transition cursor-pointer" onclick="openDrawer('${lead.id}')">
+            <td class="py-3 px-4">
+              <div class="font-semibold text-white truncate max-w-xs">${escapeHtml(lead.businessName)}</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">${lead.contactPerson ? escapeHtml(lead.contactPerson) : '<span class="text-slate-600">No Contact Assigned</span>'}</div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="text-slate-200">${escapeHtml(lead.city || 'Unknown')}</div>
+              <div class="text-[11px] text-surface-muted capitalize">${escapeHtml(lead.niche || 'General')}</div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center space-x-1 font-mono text-amber-400">
+                <span>${lead.rating || '0.0'}</span>
+                <span class="text-slate-500 text-[10px]">(${lead.reviewCount || 0} reviews)</span>
+              </div>
+            </td>
+            <td class="py-3 px-4">
+              ${emailBadge}
+              ${(lead.emails && lead.emails.length > 1) ? `<span class="ml-1 text-[10px] font-mono text-slate-500">+${lead.emails.length - 1} alt</span>` : ''}
+            </td>
+            <td class="py-3 px-4 font-mono text-slate-400 truncate max-w-[160px]">
+              ${lead.websiteUrl ? `<a href="${escapeHtml(lead.websiteUrl)}" target="_blank" onclick="event.stopPropagation()" class="hover:text-emerald-400 underline decoration-slate-600">${escapeHtml(lead.websiteUrl.replace(/^https?:\/\//, ''))}</a>` : '<span class="text-slate-600">No Website</span>'}
+            </td>
+            <td class="py-3 px-4 text-right">
+              <button onclick="event.stopPropagation(); openDrawer('${lead.id}')" class="px-2.5 py-1 rounded bg-surface-base hover:bg-surface-border border border-surface-border text-slate-300 hover:text-white transition">
+                Inspect
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updatePagination(total) {
+      document.getElementById('page-total').textContent = total || 0;
+      const start = total === 0 ? 0 : (currentPage - 1) * 25 + 1;
+      const end = Math.min(currentPage * 25, total);
+      document.getElementById('page-start').textContent = start;
+      document.getElementById('page-end').textContent = end;
+      document.getElementById('page-number').textContent = `${currentPage} / ${totalPages || 1}`;
+
+      document.getElementById('btn-prev').disabled = currentPage <= 1;
+      document.getElementById('btn-next').disabled = currentPage >= totalPages;
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        fetchLeads();
+      }
+    }
+
+    function nextPage() {
+      if (currentPage < totalPages) {
+        currentPage++;
+        fetchLeads();
+      }
+    }
+
+    function debounceSearch() {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        currentPage = 1;
+        fetchLeads();
+      }, 300);
+    }
+
+    // Drawer Management
+    function openDrawer(id) {
+      selectedLead = currentLeads.find(l => l.id === id);
+      if (!selectedLead) return;
+
+      document.getElementById('drawer-title').textContent = selectedLead.businessName;
+      document.getElementById('edit-business-name').value = selectedLead.businessName || '';
+      document.getElementById('edit-city').value = selectedLead.city || '';
+      document.getElementById('edit-niche').value = selectedLead.niche || '';
+      document.getElementById('edit-phone').value = selectedLead.phone || '';
+      document.getElementById('edit-website').value = selectedLead.websiteUrl || '';
+      document.getElementById('btn-open-website').href = selectedLead.websiteUrl || '#';
+      document.getElementById('edit-contact-person').value = selectedLead.contactPerson || '';
+      document.getElementById('edit-primary-email').value = selectedLead.primaryEmail || (selectedLead.emails && selectedLead.emails[0]) || '';
+      document.getElementById('edit-status').value = selectedLead.status || 'verified';
+      document.getElementById('edit-notes').value = selectedLead.notes || '';
+      document.getElementById('email-verify-feedback').textContent = '';
+
+      // Populate Discovered Emails
+      const emailsList = document.getElementById('discovered-emails-list');
+      const allEmails = selectedLead.emails || [];
+      if (allEmails.length === 0) {
+        emailsList.innerHTML = `<div class="text-slate-500">Zero emails crawled from website.</div>`;
+      } else {
+        emailsList.innerHTML = allEmails.map(em => `
+          <div class="flex items-center justify-between p-1.5 rounded bg-surface-card border border-surface-border">
+            <span class="font-mono text-slate-300">${escapeHtml(em)}</span>
+            <div class="space-x-1">
+              <button onclick="setPrimaryEmail('${escapeHtml(em)}')" class="px-2 py-0.5 rounded bg-surface-base hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px]">Set Primary</button>
+              <button onclick="removeAlternateEmail('${escapeHtml(em)}')" class="px-2 py-0.5 rounded bg-surface-base hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px]">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const backdrop = document.getElementById('drawer-backdrop');
+      const drawer = document.getElementById('inspector-drawer');
+      backdrop.classList.remove('opacity-0', 'pointer-events-none');
+      backdrop.classList.add('opacity-100');
+      drawer.classList.remove('translate-x-full');
+    }
+
+    function closeDrawer() {
+      const backdrop = document.getElementById('drawer-backdrop');
+      const drawer = document.getElementById('inspector-drawer');
+      backdrop.classList.add('opacity-0', 'pointer-events-none');
+      backdrop.classList.remove('opacity-100');
+      drawer.classList.add('translate-x-full');
+      selectedLead = null;
+    }
+
+    function setPrimaryEmail(email) {
+      document.getElementById('edit-primary-email').value = email;
+    }
+
+    function removeAlternateEmail(email) {
+      if (!selectedLead) return;
+      selectedLead.emails = (selectedLead.emails || []).filter(e => e !== email);
+      openDrawer(selectedLead.id);
+    }
+
+    async function verifyCurrentPrimaryEmail() {
+      const email = document.getElementById('edit-primary-email').value.trim();
+      const feedback = document.getElementById('email-verify-feedback');
+      if (!email) return;
+
+      feedback.innerHTML = `<span class="text-slate-400">Querying DNS MX...</span>`;
+      try {
+        const res = await fetch('/api/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (data.deliverable) {
+          feedback.innerHTML = `<span class="text-emerald-400 font-medium">Valid Deliverable (Active MX on @${data.domain})</span>`;
+        } else {
+          feedback.innerHTML = `<span class="text-rose-400 font-medium">Undeliverable (${data.reason || 'No MX records'})</span>`;
+        }
+      } catch (err) {
+        feedback.innerHTML = `<span class="text-rose-400 font-medium">Verification failed</span>`;
+      }
+    }
+
+    async function saveCurrentLead() {
+      if (!selectedLead) return;
+      const updates = {
+        businessName: document.getElementById('edit-business-name').value.trim(),
+        city: document.getElementById('edit-city').value.trim(),
+        niche: document.getElementById('edit-niche').value.trim(),
+        phone: document.getElementById('edit-phone').value.trim(),
+        websiteUrl: document.getElementById('edit-website').value.trim(),
+        contactPerson: document.getElementById('edit-contact-person').value.trim(),
+        primaryEmail: document.getElementById('edit-primary-email').value.trim(),
+        status: document.getElementById('edit-status').value,
+        notes: document.getElementById('edit-notes').value.trim(),
+        emails: selectedLead.emails || []
+      };
+
+      if (updates.primaryEmail && !updates.emails.includes(updates.primaryEmail)) {
+        updates.emails.unshift(updates.primaryEmail);
+      }
+
+      try {
+        const res = await fetch(`/api/leads/${selectedLead.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updates)
+        });
+        if (res.ok) {
+          closeDrawer();
+          fetchLeads();
+          fetchStats();
+        }
+      } catch (err) {
+        console.error('Error saving lead:', err);
+      }
+    }
+
+    async function deleteCurrentLead() {
+      if (!selectedLead) return;
+      if (!confirm(`Are you sure you want to delete "${selectedLead.businessName}"?`)) return;
+
+      try {
+        const res = await fetch(`/api/leads/${selectedLead.id}`, { method: 'DELETE' });
+        if (res.ok) {
+          closeDrawer();
+          fetchLeads();
+          fetchStats();
+        }
+      } catch (err) {
+        console.error('Error deleting lead:', err);
+      }
+    }
+
+    async function handleScraperToggle() {
+      const statusText = document.getElementById('crawler-status-text').textContent;
+      const isRunning = statusText.includes('Active');
+
+      if (isRunning) {
+        await fetch('/api/scrape/stop', { method: 'POST' });
+      } else {
+        const payload = {
+          country: document.getElementById('ctl-country').value.trim(),
+          cities: document.getElementById('ctl-city').value.trim(),
+          niche: document.getElementById('ctl-niche').value.trim(),
+          minRating: document.getElementById('ctl-rating').value.trim(),
+          minReviews: document.getElementById('ctl-reviews').value.trim()
+        };
+        await fetch('/api/scrape/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
+      setTimeout(fetchStats, 500);
+    }
+
+    function toggleLogTerminal() {
+      const term = document.getElementById('log-terminal');
+      term.classList.toggle('hidden');
+    }
+
+    function openVerifyModal() {
+      document.getElementById('verify-modal').classList.remove('hidden');
+    }
+
+    function closeVerifyModal() {
+      document.getElementById('verify-modal').classList.add('hidden');
+    }
+
+    async function runModalVerify() {
+      const email = document.getElementById('modal-verify-input').value.trim();
+      const resultBox = document.getElementById('modal-verify-result');
+      if (!email) return;
+
+      resultBox.innerHTML = `Querying DNS MX for ${escapeHtml(email)}...`;
+      try {
+        const res = await fetch('/api/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (data.deliverable) {
+          resultBox.innerHTML = `<span class="text-emerald-400 font-bold">DELIVERABLE</span><br><span class="text-slate-300">Active MX exchange records verified on domain @${data.domain}</span>`;
+        } else {
+          resultBox.innerHTML = `<span class="text-rose-400 font-bold">REJECTED</span><br><span class="text-slate-400">${escapeHtml(data.reason || 'Domain has no reachable Mail Exchange server')}</span>`;
+        }
+      } catch (err) {
+        resultBox.innerHTML = `<span class="text-rose-400">Network or DNS timeout</span>`;
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Init Lifecycle
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchStats();
+      fetchLeads();
+      pollInterval = setInterval(() => {
+        fetchStats();
+      }, 3000);
+    });
+  </script>
+</body>
+</html>

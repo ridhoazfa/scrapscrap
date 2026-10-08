@@ -1,0 +1,8 @@
+# Cursor Rules for ScrapScrap
+
+- You are working on ScrapScrap, an open-source local-first Google Maps and website email harvester.
+- All core engine modules reside under `src/core/`.
+- Local storage uses `src/data/store.js` (zero-compilation flat JSON).
+- The Web UI runs via `src/ui/server.js` on port 3800.
+- When creating or modifying UI components, maintain the Apple Design & Impeccable guidelines: ZERO emojis in UI code, use clean vector SVG icons, and use critically damped spring animations for sheets and drawers.
+- Read `AGENTS.md` for CLI flags and programmatic APIs.
