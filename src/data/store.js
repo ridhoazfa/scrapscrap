@@ -118,27 +118,38 @@ class LeadStore {
     const existing = this.leads.get(id);
 
     const now = new Date().toISOString();
-    const emails = Array.isArray(leadData.emails) ? Array.from(new Set(leadData.emails)) : [];
-    const primaryEmail = leadData.primaryEmail || (emails.length > 0 ? emails[0] : null);
+    const existingEmails = (existing && Array.isArray(existing.emails)) ? existing.emails : [];
+    const newEmails = Array.isArray(leadData.emails) ? leadData.emails : [];
+    const emails = Array.from(new Set([...existingEmails, ...newEmails]));
+    const primaryEmail = leadData.primaryEmail || (existing && existing.primaryEmail) || (emails.length > 0 ? emails[0] : null);
+
+    const existingSocial = (existing && existing.socialLinks) ? existing.socialLinks : {};
+    const newSocial = leadData.socialLinks || {};
+    const socialLinks = {
+      instagram: newSocial.instagram || existingSocial.instagram || null,
+      facebook: newSocial.facebook || existingSocial.facebook || null,
+      linkedin: newSocial.linkedin || existingSocial.linkedin || null,
+      tiktok: newSocial.tiktok || existingSocial.tiktok || null
+    };
 
     const record = {
       id,
-      businessName: leadData.businessName || 'Unnamed Business',
-      city: leadData.city || 'Unknown',
-      niche: leadData.niche || leadData.matchedSlug || 'General',
-      matchedSlug: leadData.matchedSlug || leadData.niche || 'general',
-      phone: leadData.phone || '',
-      rating: typeof leadData.rating === 'number' ? leadData.rating : 0,
-      reviewCount: typeof leadData.reviewCount === 'number' ? leadData.reviewCount : 0,
-      mapsUrl: leadData.mapsUrl || '',
-      websiteUrl: leadData.websiteUrl || '',
+      businessName: leadData.businessName || (existing ? existing.businessName : 'Unnamed Business'),
+      city: leadData.city || (existing ? existing.city : 'Unknown'),
+      niche: leadData.niche || leadData.matchedSlug || (existing ? existing.niche : 'General'),
+      matchedSlug: leadData.matchedSlug || leadData.niche || (existing ? existing.matchedSlug : 'general'),
+      phone: leadData.phone || (existing ? existing.phone : ''),
+      rating: typeof leadData.rating === 'number' ? leadData.rating : (existing ? existing.rating : 0),
+      reviewCount: typeof leadData.reviewCount === 'number' ? leadData.reviewCount : (existing ? existing.reviewCount : 0),
+      mapsUrl: leadData.mapsUrl || (existing ? existing.mapsUrl : ''),
+      websiteUrl: leadData.websiteUrl || (existing ? existing.websiteUrl : ''),
       emails: emails,
       primaryEmail: primaryEmail,
       contactPerson: leadData.contactPerson || (existing ? existing.contactPerson : ''),
       notes: leadData.notes || (existing ? existing.notes : ''),
-      socialLinks: leadData.socialLinks || { instagram: null, facebook: null, linkedin: null, tiktok: null },
-      status: leadData.status || (emails.length > 0 ? 'verified' : 'new'),
-      locale: leadData.locale || 'en',
+      socialLinks: socialLinks,
+      status: leadData.status || (existing ? existing.status : (emails.length > 0 ? 'verified' : 'new')),
+      locale: leadData.locale || (existing ? existing.locale : 'en'),
       createdAt: existing ? existing.createdAt : now,
       updatedAt: now
     };

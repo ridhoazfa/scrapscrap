@@ -148,9 +148,9 @@ const server = http.createServer(async (req, res) => {
       const niche = sanitizeStr(body.niche || 'Gym');
       const minRating = sanitizeStr(body.minRating || '4.0', 16);
       const minReviews = sanitizeStr(body.minReviews || '100', 16);
-      const headless = body.headless !== false ? 'true' : 'false';
+      const headless = (body.headless === false || body.headless === 'false') ? 'false' : 'true';
 
-      activeScraperLog = [`[STUDIO] Starting scraper run: ${cities} (${niche})...`];
+      activeScraperLog = [`[STUDIO] Starting scraper run: ${cities} (${niche}) [Mode: ${headless === 'true' ? 'Headless' : 'Visual Window'}]...`];
 
       const envCopy = {
         ...process.env,
