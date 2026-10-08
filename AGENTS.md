@@ -125,3 +125,4 @@ All leads persisted in `data/leads.json` strictly conform to the following schem
 1. **Zero Secret Leaks**: Never hardcode production API tokens or private URLs in commits. All configuration must flow through `.env` or CLI arguments.
 2. **Local Storage First**: Leads must remain stored on local disk (`data/leads.json`). Never transmit scraped PII to unverified third-party endpoints.
 3. **Zero Emojis in Web UI**: Any modifications to `src/ui/` must use vector SVG iconography (Lucide / standard SVG). Unicode emojis in frontend UI code are strictly prohibited.
+4. **Reference Docs**: Consult [ARCHITECTURE.md](ARCHITECTURE.md) for subsystem deep-dives, [CLAUDE.md](CLAUDE.md) for Claude Code commands, and [SECURITY.md](SECURITY.md) for SSRF boundaries.

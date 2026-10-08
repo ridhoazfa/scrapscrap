@@ -1,40 +1,60 @@
 # ScrapScrap
 
-> **Local-first Google Maps lead scraper & website email harvester with native DNS MX deliverability verification and Lead Studio GUI.**
+> Local-first Google Maps lead scraper and website email harvester with native DNS MX deliverability verification and local Lead Studio interface.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-Chromium-orange.svg)](https://playwright.dev/)
+[![Zero Cloud Dependency](https://img.shields.io/badge/Cloud%20APIs-Zero%20(100%25%20Local)-success.svg)](#architecture)
 
 ---
 
-## Why ScrapScrap?
+## Overview
 
-Most commercial lead scrapers (Apify, Outscraper, Bright Data) charge \$99 to \$250 per month, cap your results, or hand you raw unverified emails that bounce and damage your outbound domain reputation.
+Most lead scrapers charge monthly subscriptions (\$99 to \$250/mo) for cloud credits, cap search volume, and export unverified email addresses that bounce when loaded into cold outreach software.
 
-**ScrapScrap runs 100% locally on your machine.** It crawls Google Maps listings via Playwright, extracts public business websites, sweeps their pages with a 20-thread asynchronous HTTP crawler, decrypts Cloudflare-obfuscated emails, and validates DNS MX exchange records before saving the lead to your local database.
+ScrapScrap runs entirely on your local machine. It automates Google Maps searches via Playwright Chromium, extracts business websites, crawls subpages using a 20-worker asynchronous HTTP pool, decodes Cloudflare email obfuscation, and verifies domain mail exchange (MX) records directly against public DNS resolvers before saving records to your local database.
 
-### Key Capabilities
+```text
++-------------------+      +-----------------------+      +--------------------------+
+|  Google Maps      | ---> |  20-Thread HTTP Pool  | ---> |  Cloudflare XOR Decoder  |
+|  (Playwright)     |      |  (Subpage Discovery)  |      |  (/cdn-cgi/l/email-prot) |
++-------------------+      +-----------------------+      +--------------------------+
+                                                                       |
++-------------------+      +-----------------------+                   v
+|  Export: CSV / UI | <--- |  Local Store (JSON)   | <--- +--------------------------+
+|  (Apple-grade UI) |      |  (Atomic disk merge)  |      |  5-Layer Deliverability  |
++-------------------+      +-----------------------+      |  (DNS MX @ 1.1.1.1/8.8)  |
+                                                          +--------------------------+
+```
 
-- **Zero Subscription Fees**: Runs on your local hardware. No API tokens or monthly limits.
-- **5-Layer Deliverability Verification**: Automatically checks syntax, strips asset false positives (`.png`, `.jpg`), filters template test emails (`user@domain.com`), drops major ESP system desks (`support@yahoo.com`), and queries Cloudflare (`1.1.1.1`) and Google (`8.8.8.8`) DNS servers for valid MX records.
-- **Cloudflare XOR De-Obfuscation**: Decodes `/cdn-cgi/l/email-protection` hex strings automatically.
-- **Lead Studio Web UI**: A local dashboard (`http://localhost:3800`) inspired by Apple design principles. Search, filter, inspect, edit primary outreach emails, add contact persons, and export clean CSVs.
-- **1-Click Windows Launchers**: Double-click batch runners in `launchers/` to spawn up to 10 parallel worker windows across target cities without touching the command line.
-- **AI-Agent Ready**: Includes `AGENTS.md` and `.cursorrules` with programmatic APIs for autonomous subagent workflows in Cursor, Claude Code, and Antigravity.
+---
+
+## Comparison Matrix
+
+| Feature | ScrapScrap (OSS) | Apify / Outscraper | Bright Data |
+| :--- | :--- | :--- | :--- |
+| **Cost** | **\$0 (Free & Open Source)** | \$49 to \$249 / month | \$500+ / month |
+| **Usage Limits** | **Unlimited (Local CPU & Bandwidth)** | Capped by monthly credits | Pay-per-gigabyte |
+| **Email Deliverability** | **Built-in 5-layer check + DNS MX** | Raw text only (Unverified) | Raw text only |
+| **Cloudflare Decryption** | **Automatic XOR de-obfuscation** | Third-party actor add-ons | Proxy-dependent |
+| **Data Privacy** | **100% Local (data stays on your disk)** | Uploaded to vendor cloud | Uploaded to vendor cloud |
+| **Web Interface** | **Local Lead Studio (port 3800)** | Web dashboard | API / Complex dashboard |
+| **CLI & AI Agent APIs** | **Native `--json` flag & Node module** | Custom API wrappers | REST API only |
 
 ---
 
 ## 60-Second Quickstart
 
 ### Prerequisites
-- Node.js >= 18.0.0
-- Playwright Chromium (`npx playwright install chromium`)
+
+- [Node.js](https://nodejs.org/) v18.0.0 or higher
+- Windows, macOS, or Linux
 
 ### Installation
 
 ```bash
-# 1. Clone the repository
+# 1. Clone repository
 git clone https://github.com/ridhoazfa/scrapscrap.git
 cd scrapscrap
 
@@ -45,41 +65,42 @@ npm install
 npm run install-browser
 ```
 
-### Running the Web Studio
+### Starting Lead Studio (Web Interface)
 
 ```bash
-# Launch the local dashboard at http://localhost:3800
 npm run ui
-
-# Or on Windows, double-click:
-quickstart.bat
 ```
 
-Open [http://localhost:3800](http://localhost:3800) in your browser. Configure your target cities, select a niche, and monitor real-time worker logs.
+Open [http://localhost:3800](http://localhost:3800) in your browser.
+
+On Windows, you can also launch the interactive control center by double-clicking:
+```bat
+quickstart.bat
+```
 
 ---
 
 ## Command Line Interface (CLI)
 
-ScrapScrap can be run completely headless from your terminal:
+ScrapScrap includes a command-line interface for terminal usage and automation scripts:
 
 ```bash
-# Verify a single email deliverability directly via DNS MX lookup
+# 1. Verify a single email address via DNS MX query
 node src/cli.js --verify "info@summitfitness.com"
 
-# Scrape a specific city and niche with custom review filters
+# 2. Scrape specific cities and niches with review rating filters
 node src/cli.js --cities "Austin,Dallas" --niche "Gym" --min-rating 4.0 --min-reviews 100
 
-# Export all banked leads to a clean CSV
+# 3. Export all stored leads to a clean CSV
 node src/cli.js --export "leads.csv"
 
-# Display database metrics in terminal
+# 4. Display database metrics in terminal
 node src/cli.js --stats
 ```
 
-### Machine-Readable Mode for AI Coding Agents
+### JSON Mode for AI Agents & CI/CD
 
-Add the `--json` flag to receive structured JSON outputs in stdout:
+Add `--json` to any command to receive machine-readable output in stdout:
 
 ```bash
 node src/cli.js --verify "contact@studio.com" --json
@@ -90,51 +111,93 @@ node src/cli.js --stats --json
 
 ## Programmatic Node.js API
 
-Import ScrapScrap into your own scripts or automation pipelines:
+Import ScrapScrap into your own automation pipelines:
 
 ```javascript
 const { getLeads, verifyEmail, updateLead, exportCsv } = require('scrapscrap');
 
-// Verify email deliverability
-const deliverable = await verifyEmail('owner@agency.com');
-if (deliverable) {
-  console.log('Valid email ready for outreach:', deliverable);
+async function main() {
+  // 1. Verify email deliverability
+  const deliverable = await verifyEmail('owner@example.com');
+  console.log('Deliverable via MX:', deliverable);
+
+  // 2. Query stored leads
+  const result = getLeads({
+    search: 'Dental',
+    emailStatus: 'has_email',
+    minRating: 4.5,
+    limit: 10
+  });
+  console.log(`Matched ${result.total} dentists.`);
+
+  // 3. Export filtered records to RFC4180 CSV
+  const csv = exportCsv(result.leads);
 }
 
-// Query stored leads
-const result = getLeads({
-  search: 'Dental',
-  emailStatus: 'has_email',
-  minRating: 4.5
-});
-console.log(`Found ${result.total} dentists.`);
-
-// Export to CSV
-const csv = exportCsv(result.leads);
+main().catch(console.error);
 ```
+
+---
+
+## 5-Layer Deliverability Verification
+
+ScrapScrap does not save raw email strings directly from webpage HTML. Every candidate address passes through a 5-layer pipeline:
+
+1. **Syntax and Character Sanitization**: Strips URL schemes (`mailto:`), decodes percent-encoded entities, strips unicode artifacts, and removes leading phone prefixes.
+2. **Placeholder and Dummy Username Filtering**: Rejects generic usernames (`test`, `dummy`, `user`, `youremail`, `myname`, `quiz-counter`).
+3. **Template and Demo Domain Blacklist**: Rejects static website template domains (`example.com`, `sentry.io`, `wix.com`, `squarespace.com`, `weebly.com`, `shopify.com`).
+4. **ESP Reserved System Desks**: Rejects system desks on shared public email providers (`support@yahoo.com`, `admin@gmail.com`, `billing@outlook.com`).
+5. **Persistent Dead Domain Suppression & Authoritative DNS MX**: Rechecks against local dead domain caches and queries Cloudflare (`1.1.1.1`) and Google (`8.8.8.8`) for active Mail Exchange records.
 
 ---
 
 ## Windows 1-Click Launchers (`launchers/`)
 
-For Windows users who prefer zero command-line overhead:
-1. Open the `launchers/` folder.
-2. Double-click any pre-generated batch file (e.g. `run-united-states-pt1.bat`, `run-indonesia-pt1.bat`, `run-united-kingdom-pt1.bat`).
-3. Up to 10 isolated worker consoles will spawn in parallel, each scraping a dedicated city with automatic CAPTCHA backoff and process isolation.
-4. To terminate all workers at any time, double-click `stop-all.bat`.
+For multi-threaded crawling on Windows without command-line configuration:
 
-To regenerate or customize launchers from `countries.json`:
+1. Open the `launchers/` directory.
+2. Double-click any pre-generated country runner (e.g., `run-united-states-pt1.bat`, `run-united-kingdom-pt1.bat`, `run-indonesia-pt1.bat`).
+3. Up to 10 isolated worker consoles spawn concurrently, each scraping an assigned city with independent state tracking and automatic CAPTCHA backoff.
+4. To stop all workers at any time, run `stop-all.bat`.
+
+To regenerate custom launchers from `countries.json`:
 ```bash
 npm run generate-launchers
 ```
 
 ---
 
-## Responsible Usage & Rate Limits
+## Exporting for Cold Outreach
 
-- **Respect Public Targets**: ScrapScrap is built for B2B contact discovery from public Google Maps listings and business websites.
-- **Anti-Spam Compliance**: Always verify that your outreach complies with local laws (CAN-SPAM, GDPR, CASL, PECR).
-- **Rate-Limiting**: Playwright Google Maps crawling includes built-in exponential backoff if temporary CAPTCHA challenges are encountered. Run within reasonable worker concurrency for your internet connection.
+CSVs exported via Lead Studio (`/api/export/csv`) or CLI (`--export`) follow the RFC4180 format and include spreadsheet formula injection defense (DDE prevention). The columns map directly into cold outreach platforms such as Instantly, Smartlead, Lemlist, and Apollo:
+
+- `Business Name`
+- `Contact Person`
+- `Primary Email`
+- `All Emails`
+- `Phone`
+- `City`
+- `Niche`
+- `Rating`
+- `Review Count`
+- `Website`
+- `Google Maps URL`
+- `Instagram`
+- `Facebook`
+- `LinkedIn`
+- `TikTok`
+- `Notes`
+- `Status`
+
+---
+
+## Documentation
+
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Subsystem technical documentation and concurrency model.
+- [AGENTS.md](AGENTS.md) - Operating manual and programmatic interfaces for AI coding agents.
+- [CLAUDE.md](CLAUDE.md) - Instructions and workflow commands for Claude Code CLI sessions.
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Development setup, code style, and pull request guidelines.
+- [SECURITY.md](SECURITY.md) - Vulnerability reporting and security boundaries.
 
 ---
 

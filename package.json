@@ -4,6 +4,11 @@
   "description": "Local-first Google Maps and website email harvester with built-in DNS MX verification and Lead Studio GUI",
   "author": "Ridho Azfa",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ridhoazfa/scrapscrap.git"
+  },
+  "homepage": "https://github.com/ridhoazfa/scrapscrap#readme",
   "main": "src/index.js",
   "bin": {
     "scrapscrap": "src/cli.js"
