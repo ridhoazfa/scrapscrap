@@ -3,6 +3,7 @@
 > Local-first Google Maps lead scraper and website email harvester with native DNS MX deliverability verification and local Lead Studio interface.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/ridhoazfa/scrapscrap/actions/workflows/ci.yml/badge.svg)](https://github.com/ridhoazfa/scrapscrap/actions/workflows/ci.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-Chromium-orange.svg)](https://playwright.dev/)
 [![Zero Cloud Dependency](https://img.shields.io/badge/Cloud%20APIs-Zero%20(100%25%20Local)-success.svg)](#architecture)
