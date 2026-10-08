@@ -5,6 +5,9 @@
 // Round-robin niche rotation, spatial district targeting,
 // CAPTCHA exponential backoff, and local store persistence.
 // ============================================================
+if (typeof globalThis.File === 'undefined') {
+  globalThis.File = class File {};
+}
 
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });

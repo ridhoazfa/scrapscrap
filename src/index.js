@@ -5,6 +5,9 @@
 // Clean Node.js exports for custom automation scripts,
 // integrations, and AI-agent autonomous workflows.
 // ============================================================
+if (typeof globalThis.File === 'undefined') {
+  globalThis.File = class File {};
+}
 
 const store = require('./data/store');
 const validator = require('./core/validator');

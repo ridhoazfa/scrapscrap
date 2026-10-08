@@ -5,6 +5,9 @@
 // Fast, non-blocking website email extraction via axios + cheerio.
 // Concurrency: up to 20 parallel HTTP worker threads (EMAIL_CRAWLER_CONCURRENCY).
 // ============================================================
+if (typeof globalThis.File === 'undefined') {
+  globalThis.File = class File {};
+}
 
 const axios = require('axios');
 const cheerio = require('cheerio');

@@ -18,7 +18,8 @@
     "ui": "node src/ui/server.js",
     "scrape": "node src/cli.js",
     "generate-launchers": "node generate-launchers.cjs",
-    "install-browser": "npx playwright install chromium"
+    "install-browser": "npx playwright install chromium",
+    "test": "node scripts/verify-ci.cjs"
   },
   "keywords": [
     "lead-generation",
