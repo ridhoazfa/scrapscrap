@@ -12,15 +12,14 @@
 
 We take the security of ScrapScrap seriously. If you discover a vulnerability or security flaw, please report it responsibly rather than opening a public GitHub issue.
 
-Please email vulnerability details to:
-**[ridho@codaxiom.com](mailto:ridho@codaxiom.com)**
+Please report vulnerabilities privately via [GitHub Security Advisories](https://github.com/ridhoazfa/scrapscrap/security/advisories/new).
 
 Include:
 - A description of the vulnerability.
 - Steps to reproduce or a proof of concept.
 - Potential impact and affected components.
 
-We will acknowledge receipt within 48 hours and work on a fix promptly.
+We will review reports promptly and publish patches accordingly.
 
 ---
 

@@ -43,6 +43,8 @@ ScrapScrap runs entirely on your local machine. It automates Google Maps searche
 | **Web Interface** | **Local Lead Studio (port 3800)** | Web dashboard | API / Complex dashboard |
 | **CLI & AI Agent APIs** | **Native `--json` flag & Node module** | Custom API wrappers | REST API only |
 
+*Note: Third-party service names (Apify, Outscraper, Bright Data) are referenced strictly for comparative purposes under nominative fair use. ScrapScrap is an independent project and has no affiliation with or endorsement from these providers.
+
 ---
 
 ## 60-Second Quickstart
@@ -150,6 +152,15 @@ ScrapScrap does not save raw email strings directly from webpage HTML. Every can
 4. **ESP Reserved System Desks**: Rejects system desks on shared public email providers (`support@yahoo.com`, `admin@gmail.com`, `billing@outlook.com`).
 5. **Persistent Dead Domain Suppression & Authoritative DNS MX**: Rechecks against local dead domain caches and queries Cloudflare (`1.1.1.1`) and Google (`8.8.8.8`) for active Mail Exchange records.
 
+### Understanding Deliverability & Bounces
+
+ScrapScrap validates candidate addresses at the **authoritative DNS MX record level**, verifying that the target domain has active, configured mail exchange servers capable of receiving mail. This eliminates the vast majority of invalid leads (dead websites, parked landing pages, expired domains, and syntax errors) at discovery.
+
+**Why not invasive SMTP mailbox pings (`RCPT TO`)?**  
+Simulating SMTP handshakes without delivering mail frequently triggers spam traps, damages residential and office IP reputations, and leads to immediate ISP greylisting. By resolving DNS MX records directly against trusted public resolvers (`1.1.1.1` and `8.8.8.8`), ScrapScrap keeps your scraping footprint clean and silent.
+
+*Practitioner Note*: While domain MX verification eliminates dead domains, catch-all domains and recently decommissioned individual mailboxes can still occasionally bounce. For maximum inbox placement (>95%), we recommend pairing ScrapScrap exports with your cold outreach sequencer's warmup and bounce-protection safeguards.
+
 ---
 
 ## Windows 1-Click Launchers (`launchers/`)
@@ -199,6 +210,14 @@ CSVs exported via Lead Studio (`/api/export/csv`) or CLI (`--export`) follow the
 - [CLAUDE.md](CLAUDE.md) - Instructions and workflow commands for Claude Code CLI sessions.
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Development setup, code style, and pull request guidelines.
 - [SECURITY.md](SECURITY.md) - Vulnerability reporting and security boundaries.
+
+---
+
+## Legal Disclaimer & Responsible Use
+
+- **Trademark Notice**: Google, Google Maps, and other company or platform names mentioned in this repository are trademarks or registered trademarks of their respective holders. ScrapScrap is an independent open-source project and is not affiliated with, endorsed by, or sponsored by Google LLC or any cited entity.
+- **Compliance & Local Regulations**: ScrapScrap is designed for automated discovery of publicly published business information. Users are solely responsible for ensuring that their data collection and outreach practices comply with applicable laws and regulations, including the CAN-SPAM Act, GDPR, PECR, CASL, and relevant website terms of service. The authors and contributors assume no liability for misuse.
+- **MIT License Notice**: This software is provided "AS IS", without warranty of any kind, express or implied.
 
 ---
 
