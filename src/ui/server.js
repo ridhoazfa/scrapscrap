@@ -135,6 +135,13 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, 400, { error: 'A scraper job is already running' });
       }
 
+      let body = {};
+      try {
+        body = await parseJsonBody(req);
+      } catch (err) {
+        return sendJson(res, 400, { error: 'Invalid JSON payload: ' + err.message });
+      }
+
       const sanitizeStr = (s, maxLen = 256) => String(s || '').replace(/[\r\n\0]/g, '').slice(0, maxLen).trim();
       const cities = sanitizeStr(body.city || body.cities || 'Jakarta');
       const country = sanitizeStr(body.country || 'indonesia');

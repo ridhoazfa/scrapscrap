@@ -871,11 +871,11 @@ async function extractBusinessDetails(page) {
 }
 
 // ── Email normalization & junk rejection ──────────────────────
-// Repairs the malformed patterns found in legacy emails_seen.txt:
-//   phone-prefixed   0811-2801-98080811-2707-808admin@bhplaw.co.id → admin@bhplaw.co.id
-//   country-code     +62bakerytenggilis@gmail.com → bakerytenggilis@gmail.com
-//   concatenated TLD x@fourpoints.comreservasi → x@fourpoints.com · x@reyandco.co.ididen → x@reyandco.co.id
-//   stray punct      -esupport@136point1.com → esupport@136point1.com
+// Repairs the malformed patterns found in raw website text:
+//   phone-prefixed   0811-2801-98080811-2707-808admin@examplelaw.com -> admin@examplelaw.com
+//   country-code     +62bakery@example.com -> bakery@example.com
+//   concatenated TLD contact@examplehotel.comreservasi -> contact@examplehotel.com · info@examplelaw.comiden -> info@examplelaw.com
+//   stray punct      -support@example.com -> support@example.com
 //   N/A patterns     na@…, none@…, .id@gmail.com → rejected outright
 // Returns '' for anything that still looks like junk — junk is never synced.
 // Genuine TLDs (common gTLDs + ccTLDs + compounds). A domain ending in one

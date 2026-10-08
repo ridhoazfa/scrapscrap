@@ -457,8 +457,8 @@
             </td>
             <td class="py-3 px-4">
               <div class="flex items-center space-x-1 font-mono text-amber-400">
-                <span>${lead.rating || '0.0'}</span>
-                <span class="text-slate-500 text-[10px]">(${lead.reviewCount || 0} reviews)</span>
+                <span>${escapeHtml(Number(lead.rating || 0).toFixed(1))}</span>
+                <span class="text-slate-500 text-[10px]">(${escapeHtml(parseInt(lead.reviewCount || 0, 10).toLocaleString())} reviews)</span>
               </div>
             </td>
             <td class="py-3 px-4">

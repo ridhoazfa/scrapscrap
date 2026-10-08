@@ -41,19 +41,41 @@ function websiteDedupKey(websiteUrl) {
 }
 
 function isPrivateIpLiteral(urlStr) {
-  if (!urlStr || typeof urlStr !== 'string') return false;
+  if (!urlStr || typeof urlStr !== 'string') return true;
   try {
-    const hostname = new URL(urlStr).hostname.toLowerCase();
-    if (hostname === 'localhost' || hostname === '::1' || hostname === '0.0.0.0') return true;
+    const parsed = new URL(urlStr);
+    // 1. Strict protocol whitelist (reject file:, gopher:, ftp:, etc.)
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return true;
+
+    // 2. Normalize hostname: strip IPv6 brackets and trim
+    const rawHost = parsed.hostname.toLowerCase();
+    const hostname = rawHost.replace(/^\[|\]$/g, '').trim();
+
+    // 3. Reject loopbacks and wildcards
+    if (hostname === 'localhost' || hostname === '::1' || hostname === '0.0.0.0' || hostname === '127.0.0.1') return true;
+
+    // 4. Reject local and internal DNS suffixes
+    if (hostname.endsWith('.local') || hostname.endsWith('.internal') || hostname.endsWith('.arpa') || hostname.endsWith('.lan')) return true;
+
+    // 5. Reject cloud metadata endpoints
+    if (hostname === '169.254.169.254' || hostname === 'metadata.google.internal' || hostname === 'instance-data') return true;
+
+    // 6. Check IPv4 private ranges (127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, 0.0.0.0/8)
     if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname)) {
       const parts = hostname.split('.').map(Number);
-      if (parts[0] === 127) return true;
-      if (parts[0] === 10) return true;
+      if (parts[0] === 0 || parts[0] === 127 || parts[0] === 10) return true;
       if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
       if (parts[0] === 192 && parts[1] === 168) return true;
       if (parts[0] === 169 && parts[1] === 254) return true;
     }
-  } catch (_) {}
+
+    // 7. Check IPv6 private/link-local/loopback prefixes
+    if (hostname.startsWith('fc') || hostname.startsWith('fd') || hostname.startsWith('fe80') || hostname.startsWith('::ffff:127.')) {
+      return true;
+    }
+  } catch (_) {
+    return true; // Fail closed on malformed URL
+  }
   return false;
 }
 
@@ -279,6 +301,7 @@ class EmailCrawlerPool extends EventEmitter {
 
   async fetchHtml(url, timeout) {
     if (this.shuttingDown || this.isShuttingDown) return null;
+    if (isPrivateIpLiteral(url)) return null;
     try {
       const response = await axios.get(url, {
         timeout: timeout || this.timeoutMs,

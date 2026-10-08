@@ -314,8 +314,11 @@ class LeadStore {
 
     const escapeCsv = (val) => {
       if (val === null || val === undefined) return '""';
-      const str = String(val).replace(/"/g, '""');
-      return `"${str}"`;
+      let str = String(val);
+      if (/^[=+\-@\t\r]/.test(str)) {
+        str = "'" + str; // Neutralize spreadsheet formula / DDE injection
+      }
+      return `"${str.replace(/"/g, '""')}"`;
     };
 
     const rows = [headers.join(',')];
