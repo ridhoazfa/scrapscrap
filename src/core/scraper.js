@@ -44,10 +44,27 @@ const PREFERRED_NICHE_ORDER = [
   'autodetailing', 'autowash', 'laundry', 'dessert', 'petcare',
   'medical', 'legal', 'cleaning', 'wedding', 'education', 'coworking', 'florist'
 ];
-const NICHE_ORDER = [
+
+const ALL_NICHES = [
   ...PREFERRED_NICHE_ORDER.filter(slug => Object.keys(NICHE_MAP).includes(slug)),
   ...Object.keys(NICHE_MAP).filter(slug => !PREFERRED_NICHE_ORDER.includes(slug))
 ];
+
+// Allow filtering to specific niches via SCRAPER_NICHES or SCRAPER_NICHE
+const userNichesRaw = (process.env.SCRAPER_NICHES || process.env.SCRAPER_NICHE || '').trim();
+let filteredNiches = [];
+if (userNichesRaw) {
+  const parts = userNichesRaw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+  for (const part of parts) {
+    const matched = matchNiche(part) || Object.keys(NICHE_MAP).find(s => s === part);
+    if (matched && !filteredNiches.includes(matched)) filteredNiches.push(matched);
+  }
+}
+
+const NICHE_ORDER = filteredNiches.length > 0
+  ? ALL_NICHES.filter(slug => filteredNiches.includes(slug))
+  : ALL_NICHES;
+
 function getNicheKeywords(slug, locale = 'en') {
   return getKeywordsForLocale(slug, locale);
 }
@@ -55,6 +72,18 @@ function nicheKeyword(slug, index = 0, locale = 'en') {
   const kws = getNicheKeywords(slug, locale);
   return kws[index % kws.length];
 }
+
+// ── Paths & Core State Identifiers (Declared early to prevent TDZ ReferenceErrors) ──
+const runIdRaw      = (process.env.SCRAPER_RUN_ID || '').trim().replace(/[\r\n]/g, '');
+const runId         = (runIdRaw && runIdRaw !== 'global')
+                        ? runIdRaw
+                        : (CITIES.length > 0 ? `${LOCALE}-${CITIES.slice(0, 3).map(c => c.toLowerCase().replace(/[^a-z0-9]/g, '')).join('-')}` : 'global');
+const RUN_ID        = runId;
+const STATE_DIR     = path.join(__dirname, '../../data/state');
+if (!fs.existsSync(STATE_DIR)) fs.mkdirSync(STATE_DIR, { recursive: true });
+const PROGRESS_PATH = path.join(STATE_DIR, "progress-" + runId + ".json");
+const PAUSE_PATH    = path.join(STATE_DIR, 'PAUSE');
+const RESULTS_DIR   = path.join(__dirname, '../../data');
 
 // ── Module-level variables for graceful signal shutdown ────────
 let activeBrowser = null;
@@ -170,18 +199,6 @@ process.on('unhandledRejection', (reason) => {
   console.error('[UNHANDLED REJECTION]', msg);
 });
 
-// ── Paths ─────────────────────────────────────────────────────
-const runIdRaw      = (process.env.SCRAPER_RUN_ID || '').trim().replace(/[\r\n]/g, '');
-const runId         = (runIdRaw && runIdRaw !== 'global')
-                        ? runIdRaw
-                        : (CITIES.length > 0 ? `${LOCALE}-${CITIES.slice(0, 3).map(c => c.toLowerCase().replace(/[^a-z0-9]/g, '')).join('-')}` : 'global');
-const RUN_ID        = runId;
-const STATE_DIR     = path.join(__dirname, '../../data/state');
-if (!fs.existsSync(STATE_DIR)) fs.mkdirSync(STATE_DIR, { recursive: true });
-const PROGRESS_PATH = path.join(STATE_DIR, "progress-" + runId + ".json");
-const PAUSE_PATH    = path.join(STATE_DIR, 'PAUSE');
-const RESULTS_DIR   = path.join(__dirname, '../../data');
-
 // ── Logging helpers ───────────────────────────────────────────
 const LOG_FILE_PATH = path.join(__dirname, '../../logs', `${runId}.log`);
 const tag = (t, msg) => {
@@ -204,6 +221,8 @@ const log = {
   captcha: (m) => tag('CAPTCHA', m),
   pause:   (m) => tag('PAUSE',   m),
   dedup:   (m) => tag('DEDUP',   m),
+  system:  (m) => tag('SYSTEM',  m),
+  error:   (m) => tag('ERROR',   m),
 };
 
 // ── Progress persistence ──────────────────────────────────────
@@ -826,7 +845,7 @@ async function extractBusinessDetails(page) {
     if (details.phone) {
       // Strip language-specific label prefixes like "Telepon: ", "Phone: "
       details.phone = details.phone.replace(/^[^:]+:\s*/, '').trim();
-      // Strip non-ASCII icon glyphs (e.g. 📞)
+      // Strip non-ASCII icon glyphs
       details.phone = details.phone.replace(/[^\x20-\x7E]/g, '').trim();
     }
 
@@ -1165,7 +1184,7 @@ async function searchOrganicWebsiteFallback(businessName, city) {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language': 'en-US,en;q=0.9'
       },
-      timeout: 6000
+      signal: AbortSignal.timeout(6000)
     });
 
     if (res.status === 403 || res.status === 429) {
@@ -1510,7 +1529,7 @@ async function processCombo(ctx, city, slug, combo) {
 
     let details;
     if (listing.websiteUrl) {
-      // 🚀 DIRECT CARD BYPASS: Website URL extracted directly from search card — 0ms page load!
+      // DIRECT CARD BYPASS: Website URL extracted directly from search card — 0ms page load!
       details = {
         businessName: bizName || 'Unknown',
         rating: listing.rating || 4.5,
@@ -1870,7 +1889,7 @@ async function main() {
         globalProgress.nicheEmailCount[item.nicheSlug] = (globalProgress.nicheEmailCount[item.nicheSlug] || 0) + newEmails.length;
       }
 
-      log.data(`[ASYNC CRAWLER STREAM] ✓ "${lead.businessName}" — ${lead.matchedSlug} | emails: ${newEmails.join(', ')}` +
+      log.data(`[ASYNC CRAWLER STREAM] [OK] "${lead.businessName}" — ${lead.matchedSlug} | emails: ${newEmails.join(', ')}` +
         (socialLinks && socialLinks.instagram ? ` | IG: ${socialLinks.instagram}` : ''));
 
       appendResultsLocal([lead], item.niche, item.city);
@@ -1917,7 +1936,7 @@ async function main() {
       continue;
     }
 
-    // Launch browser with NVIDIA RTX 3060 Hardware Acceleration
+    // Launch browser with GPU Hardware Acceleration
     log.scraper(`Launching browser (headless=${HEADLESS}, locale=${LOCALE}, GPU hardware acceleration enabled)...`);
     const browser = await chromium.launch({
       headless: HEADLESS,

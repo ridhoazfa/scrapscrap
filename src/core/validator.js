@@ -290,9 +290,15 @@ async function verifyDomainMx(domain) {
       DEAD_DOMAINS_SET.add(cleanDomain);
     }
     return isValid;
-  } catch (_) {
-    MX_CACHE.set(cleanDomain, { ok: false, expiresAt: Date.now() + MX_CACHE_TTL_MS });
-    DEAD_DOMAINS_SET.add(cleanDomain);
+  } catch (err) {
+    const isAuthoritativeDead = err && (err.code === 'ENOTFOUND' || err.code === 'ENODATA');
+    if (isAuthoritativeDead) {
+      MX_CACHE.set(cleanDomain, { ok: false, expiresAt: Date.now() + MX_CACHE_TTL_MS });
+      DEAD_DOMAINS_SET.add(cleanDomain);
+    } else {
+      // Transient error (TIMEOUT, ESERVFAIL, ECONNREFUSED) — cache for only 10m without poisoning persistent DEAD_DOMAINS_SET
+      MX_CACHE.set(cleanDomain, { ok: false, expiresAt: Date.now() + 10 * 60 * 1000 });
+    }
     return false;
   }
 }

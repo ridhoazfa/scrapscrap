@@ -446,7 +446,7 @@
           : `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono text-slate-500 bg-surface-base border border-surface-border">No Email Found</span>`;
 
         return `
-          <tr class="hover:bg-surface-cardHover/60 transition cursor-pointer" onclick="openDrawer('${lead.id}')">
+          <tr class="hover:bg-surface-cardHover/60 transition cursor-pointer" data-id="${escapeHtml(lead.id)}" onclick="openDrawer(this.dataset.id)">
             <td class="py-3 px-4">
               <div class="font-semibold text-white truncate max-w-xs">${escapeHtml(lead.businessName)}</div>
               <div class="text-[11px] text-slate-400 mt-0.5">${lead.contactPerson ? escapeHtml(lead.contactPerson) : '<span class="text-slate-600">No Contact Assigned</span>'}</div>
@@ -469,7 +469,7 @@
               ${lead.websiteUrl ? `<a href="${escapeHtml(lead.websiteUrl)}" target="_blank" onclick="event.stopPropagation()" class="hover:text-emerald-400 underline decoration-slate-600">${escapeHtml(lead.websiteUrl.replace(/^https?:\/\//, ''))}</a>` : '<span class="text-slate-600">No Website</span>'}
             </td>
             <td class="py-3 px-4 text-right">
-              <button onclick="event.stopPropagation(); openDrawer('${lead.id}')" class="px-2.5 py-1 rounded bg-surface-base hover:bg-surface-border border border-surface-border text-slate-300 hover:text-white transition">
+              <button onclick="event.stopPropagation(); openDrawer(this.closest('tr').dataset.id)" class="px-2.5 py-1 rounded bg-surface-base hover:bg-surface-border border border-surface-border text-slate-300 hover:text-white transition">
                 Inspect
               </button>
             </td>
@@ -540,8 +540,8 @@
           <div class="flex items-center justify-between p-1.5 rounded bg-surface-card border border-surface-border">
             <span class="font-mono text-slate-300">${escapeHtml(em)}</span>
             <div class="space-x-1">
-              <button onclick="setPrimaryEmail('${escapeHtml(em)}')" class="px-2 py-0.5 rounded bg-surface-base hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px]">Set Primary</button>
-              <button onclick="removeAlternateEmail('${escapeHtml(em)}')" class="px-2 py-0.5 rounded bg-surface-base hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px]">Delete</button>
+              <button data-email="${escapeHtml(em)}" onclick="setPrimaryEmail(this.dataset.email)" class="px-2 py-0.5 rounded bg-surface-base hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px]">Set Primary</button>
+              <button data-email="${escapeHtml(em)}" onclick="removeAlternateEmail(this.dataset.email)" class="px-2 py-0.5 rounded bg-surface-base hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px]">Delete</button>
             </div>
           </div>
         `).join('');

@@ -7,11 +7,11 @@ node_modules/
 *.env
 
 # Local Storage, State & Data
-data/
-results/
-logs/
-state/
-backups/
+/data/
+/results/
+/logs/
+/state/
+/backups/
 *.log
 *.csv
 emails_dump.md

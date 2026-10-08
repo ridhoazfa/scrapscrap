@@ -16,8 +16,7 @@ echo Signal sent to active workers. Terminating orphaned browser processes...
 timeout /t 2 /nobreak >nul
 
 taskkill /F /FI "WINDOWTITLE eq ScrapScrapWorker*" >nul 2>&1
-taskkill /F /IM chrome.exe /T >nul 2>&1
-taskkill /F /IM chromium.exe /T >nul 2>&1
+node src\core\process-reaper.js >nul 2>&1
 
 timeout /t 1 /nobreak >nul
 if exist "data\state\STOP_ALL_SCRAPERS" del /f /q "data\state\STOP_ALL_SCRAPERS" >nul 2>&1

@@ -285,6 +285,12 @@ class EmailCrawlerPool extends EventEmitter {
         maxRedirects: 3,
         maxContentLength: 5 * 1024 * 1024,
         httpsAgent: httpsAgent,
+        beforeRedirect: (options) => {
+          const redirectUrl = options.href || `${options.protocol}//${options.hostname}${options.path}`;
+          if (isPrivateIpLiteral(redirectUrl)) {
+            throw new Error(`SSRF blocked: Redirect to private IP literal prohibited`);
+          }
+        },
         headers: {
           'User-Agent': this.userAgent,
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

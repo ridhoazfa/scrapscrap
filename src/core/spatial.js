@@ -61,7 +61,7 @@ const COUNTRY_ALIASES = {
 };
 
 const SPATIAL_GRID_MESH = {
-  // ── Indonesia (Midtrans Merchant Target) ────────────────────
+  // ── Indonesia ──────────────────────────────────────────────
   'indonesia': {
     'Jakarta': ['Kebayoran Baru', 'Senayan', 'Menteng', 'Kelapa Gading', 'Pantai Indah Kapuk', 'Kemang', 'Tebet', 'Cilandak', 'Tanah Abang', 'Puri Indah', 'Pluit', 'Sunter'],
     'Surabaya': ['Tegalsari', 'Gubeng', 'Wonokromo', 'Sukolilo', 'Rungkut', 'Genteng', 'Mulyorejo', 'Wiyung', 'Darmo', 'Sambikerep'],

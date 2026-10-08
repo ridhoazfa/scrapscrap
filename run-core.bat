@@ -44,8 +44,7 @@ echo ============================================
 if "%SCRAPER_NO_GLOBAL_KILL%"=="1" (
   echo [MULTI-WORKER] SCRAPER_NO_GLOBAL_KILL=1 active. Protecting peer worker processes.
 ) else (
-  taskkill /F /IM chrome.exe /T >nul 2>&1
-  taskkill /F /IM chromium.exe /T >nul 2>&1
+  node src\core\process-reaper.js >nul 2>&1
 )
 
 node --max-old-space-size=8192 src\core\scraper.js

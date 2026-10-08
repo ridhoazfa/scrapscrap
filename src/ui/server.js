@@ -9,7 +9,6 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const url = require('url');
 const { spawn } = require('child_process');
 
 const store = require('../data/store');
@@ -64,8 +63,9 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  const parsedUrl = url.parse(req.url, true);
+  const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const pathname = parsedUrl.pathname;
+  const query = Object.fromEntries(parsedUrl.searchParams);
 
   try {
     // ── API Routes ──────────────────────────────────────────────
@@ -79,7 +79,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (pathname === '/api/leads' && req.method === 'GET') {
-      const results = store.queryLeads(parsedUrl.query);
+      const results = store.queryLeads(query);
       return sendJson(res, 200, results);
     }
 
@@ -120,7 +120,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (pathname === '/api/export/csv' && req.method === 'GET') {
-      const results = store.queryLeads({ ...parsedUrl.query, limit: 100000 });
+      const results = store.queryLeads({ ...query, limit: 100000 });
       const csv = store.exportToCsv(results.leads);
       res.writeHead(200, {
         'Content-Type': 'text/csv; charset=utf-8',
@@ -135,12 +135,12 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, 400, { error: 'A scraper job is already running' });
       }
 
-      const body = await parseJsonBody(req);
-      const cities = body.city || body.cities || 'Jakarta';
-      const country = body.country || 'indonesia';
-      const niche = body.niche || 'Gym';
-      const minRating = body.minRating || '4.0';
-      const minReviews = body.minReviews || '100';
+      const sanitizeStr = (s, maxLen = 256) => String(s || '').replace(/[\r\n\0]/g, '').slice(0, maxLen).trim();
+      const cities = sanitizeStr(body.city || body.cities || 'Jakarta');
+      const country = sanitizeStr(body.country || 'indonesia');
+      const niche = sanitizeStr(body.niche || 'Gym');
+      const minRating = sanitizeStr(body.minRating || '4.0', 16);
+      const minReviews = sanitizeStr(body.minReviews || '100', 16);
       const headless = body.headless !== false ? 'true' : 'false';
 
       activeScraperLog = [`[STUDIO] Starting scraper run: ${cities} (${niche})...`];
@@ -185,8 +185,15 @@ const server = http.createServer(async (req, res) => {
     if (pathname === '/api/scrape/stop' && req.method === 'POST') {
       if (activeScraperProcess) {
         try {
-          activeScraperProcess.kill('SIGINT');
-        } catch (_) {}
+          if (process.platform === 'win32') {
+            const { execSync } = require('child_process');
+            execSync(`taskkill /pid ${activeScraperProcess.pid} /T /F >nul 2>&1`);
+          } else {
+            process.kill(-activeScraperProcess.pid, 'SIGINT');
+          }
+        } catch (_) {
+          try { activeScraperProcess.kill('SIGINT'); } catch (__) {}
+        }
         activeScraperProcess = null;
         activeScraperLog.push('[STUDIO] Scraper process terminated by user.');
       }
@@ -194,8 +201,16 @@ const server = http.createServer(async (req, res) => {
     }
 
     // ── Static Files ────────────────────────────────────────────
-    let filePath = path.join(PUBLIC_DIR, pathname === '/' ? 'index.html' : pathname);
-    if (!filePath.startsWith(PUBLIC_DIR)) {
+    let cleanPath = pathname || '/';
+    try { cleanPath = decodeURIComponent(cleanPath); } catch (_) {}
+    if (cleanPath.indexOf('\0') !== -1) {
+      res.writeHead(400);
+      return res.end('Bad Request');
+    }
+
+    const resolvedPublic = path.resolve(PUBLIC_DIR);
+    let filePath = path.resolve(resolvedPublic, '.' + path.normalize('/' + (cleanPath === '/' ? 'index.html' : cleanPath)));
+    if (!filePath.startsWith(resolvedPublic + path.sep) && filePath !== path.join(resolvedPublic, 'index.html')) {
       res.writeHead(403);
       return res.end('Forbidden');
     }
@@ -233,7 +248,7 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`\n============================================================`);
   console.log(`  ScrapScrap Lead Studio running at:`);
-  console.log(`  👉 http://localhost:${PORT}`);
+  console.log(`  -> http://localhost:${PORT}`);
   console.log(`============================================================\n`);
 });
 
