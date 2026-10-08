@@ -92,8 +92,8 @@ class LeadStore {
             try { fs.writeFileSync(LEADS_FILE, JSON.stringify(list, null, 2), 'utf8'); } catch (_) {}
             try { fs.unlinkSync(tempFile); } catch (_) {}
           } else {
-            const start = Date.now();
-            while (Date.now() - start < 15) {}
+            const sleepBuf = new Int32Array(new SharedArrayBuffer(4));
+            Atomics.wait(sleepBuf, 0, 0, 15);
           }
         }
       }

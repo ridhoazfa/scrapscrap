@@ -154,12 +154,21 @@ ScrapScrap does not save raw email strings directly from webpage HTML. Every can
 
 ### Understanding Deliverability & Bounces
 
-ScrapScrap validates candidate addresses at the **authoritative DNS MX record level**, verifying that the target domain has active, configured mail exchange servers capable of receiving mail. This eliminates the vast majority of invalid leads (dead websites, parked landing pages, expired domains, and syntax errors) at discovery.
+ScrapScrap validates candidate addresses at the authoritative DNS MX record level, verifying that the target domain has active mail servers configured to receive mail. This immediately prunes the vast majority of invalid leads, including parked landing pages, dead domains, expired registrations, and malformed syntax.
 
-**Why not invasive SMTP mailbox pings (`RCPT TO`)?**  
-Simulating SMTP handshakes without delivering mail frequently triggers spam traps, damages residential and office IP reputations, and leads to immediate ISP greylisting. By resolving DNS MX records directly against trusted public resolvers (`1.1.1.1` and `8.8.8.8`), ScrapScrap keeps your scraping footprint clean and silent.
+#### The Tradeoff: Silent DNS MX vs. Invasive SMTP Probes
 
-*Practitioner Note*: While domain MX verification eliminates dead domains, catch-all domains and recently decommissioned individual mailboxes can still occasionally bounce. For maximum inbox placement (>95%), we recommend pairing ScrapScrap exports with your cold outreach sequencer's warmup and bounce-protection safeguards.
+A common question is why ScrapScrap does not run automated SMTP mailbox handshakes (`RCPT TO` commands) during discovery:
+
+1. **IP Reputation Defense**: Probing thousands of mailboxes without delivering messages is the fastest way to get your residential or office IP address added to Spamhaus, Spamcop, and Barracuda blocklists.
+2. **Greylisting & Honeypots**: Corporate mail servers treat burst probe connections from consumer IPs as bot traffic, triggering immediate ISP throttling and greylisting.
+3. **The Catch-All Reality**: Many commercial mail servers (Google Workspace, Microsoft 365, custom postfix configurations) use "catch-all" settings that return positive responses to any test address anyway, making local SMTP pings unreliable.
+
+#### Practitioner Recommendation
+
+DNS MX verification ensures that every exported domain has legitimate, active mail infrastructure. However, individual mailboxes within a valid domain can still occasionally bounce if an employee leaves or a business closes a specific desk.
+
+For reliable inbox placement (maintaining bounce rates below 2% to 3% across cold campaigns), we recommend importing ScrapScrap exports into your outreach sequencer (such as Instantly or Smartlead), where ramp-up schedules and domain rotation protect your primary sender reputation.
 
 ---
 
@@ -215,9 +224,10 @@ CSVs exported via Lead Studio (`/api/export/csv`) or CLI (`--export`) follow the
 
 ## Legal Disclaimer & Responsible Use
 
-- **Trademark Notice**: Google, Google Maps, and other company or platform names mentioned in this repository are trademarks or registered trademarks of their respective holders. ScrapScrap is an independent open-source project and is not affiliated with, endorsed by, or sponsored by Google LLC or any cited entity.
-- **Compliance & Local Regulations**: ScrapScrap is designed for automated discovery of publicly published business information. Users are solely responsible for ensuring that their data collection and outreach practices comply with applicable laws and regulations, including the CAN-SPAM Act, GDPR, PECR, CASL, and relevant website terms of service. The authors and contributors assume no liability for misuse.
-- **MIT License Notice**: This software is provided "AS IS", without warranty of any kind, express or implied.
+- **Public Data & CFAA Compliance**: ScrapScrap automates extraction of publicly available business contact information published by businesses on public directories and websites. It does not bypass paywalls, circumvent login credentials, or access private systems. Operating scrapers against publicly available data is recognized under legal precedent (such as *hiQ Labs v. LinkedIn* and *Van Buren v. United States*), provided users respect applicable terms of service and robots policies.
+- **Trademark Notice**: Google, Google Maps, Apify, Outscraper, Bright Data, and any other company or service marks cited in this repository are trademarks of their respective holders. They are referenced strictly for comparative identification under nominative fair use (*New Kids on the Block v. News America Publishing*). ScrapScrap is an independent open-source project with zero affiliation, sponsorship, or endorsement from any cited trademark holder.
+- **Outreach & Privacy Regulations**: Users are solely responsible for ensuring that any communication or data handling complies with relevant local regulations, including the CAN-SPAM Act, GDPR, UK GDPR, PECR, and CASL. Always provide genuine opt-out mechanisms and respect business privacy notices.
+- **MIT License Notice**: This software is provided "AS IS", without warranty of any kind, express or implied. The maintainers and contributors assume no liability for misuse, damages, or regulatory violations resulting from operator usage.
 
 ---
 

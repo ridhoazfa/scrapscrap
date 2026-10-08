@@ -711,7 +711,7 @@ async function extractListingCards(page) {
       let reviewCount = null;
       const fullText = card.innerText || '';
       
-      const ratingMatch = fullText.match(/([\d.,]+)\s*★/) || fullText.match(/★\s*([\d.,]+)/);
+      const ratingMatch = fullText.match(/([\d.,]+)\s*\u2605/) || fullText.match(/\u2605\s*([\d.,]+)/);
       if (ratingMatch) rating = parseFloat(ratingMatch[1].replace(',', '.'));
       
       const ariaEl = card.querySelector('span[aria-label*="ulasan" i], span[aria-label*="review" i]');
@@ -738,7 +738,7 @@ async function extractListingCards(page) {
         if (line.includes('·')) {
           const parts = line.split('·').map(p => p.trim());
           for (const part of parts) {
-            if (!cardCategory && part.length > 2 && part.length < 50 && !/★|\d+\s*(?:rb|k|\)|\()|open|closed|tutup|buka/i.test(part)) {
+            if (!cardCategory && part.length > 2 && part.length < 50 && !/\u2605|\d+\s*(?:rb|k|\)|\()|open|closed|tutup|buka/i.test(part)) {
               cardCategory = part;
             } else if (!cardAddress && (part.includes('Jl.') || part.includes('Street') || part.includes('St') || part.includes('Ave') || part.includes('Road') || part.length > 10)) {
               cardAddress = part;
